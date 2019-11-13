@@ -1,12 +1,124 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    {% block stylesheets %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <style type="text/css">
+        body {
+            background-color: #FFFFFF;
+        }
+
+        .ui.menu .item img.logo {
+            margin-right: 1.5em;
+        }
+
+        .main.container {
+            margin-top: 7em;
+        }
+
+        .wireframe {
+            margin-top: 2em;
+        }
+
+        .ui.footer.segment {
+            margin: 5em 0em 0em;
+            padding: 5em 0em;
+        }
+    </style>
+</head>
+<body>
+<div class="ui fixed inverted menu">
+    <div class="ui container">
+        <a href="{{ path('home') }}" class="header item">
+            <img class="logo" src="{{ asset('images/logo.png') }}">
+            Animal Ads
+        </a>
+        <div class="right menu">
+
+            <a href="{{ path('browse_ads') }}" class="item">Ads</a>
+            <a href="{{ path('browse_animals') }}" class="item">Animals</a>
+            <a href="{{ path('browse_categories') }}" class="item">Categories</a>
+            <div class="ui simple dropdown item">
+                Explore <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="{{ path('browse_ads') }}"><i class="dollar sign icon"></i>My Ads</a>
+                    <a class="item" href="{{ path('browse_animals') }}"><i class="heart icon"></i>My Animals</a>
+                    <a class="item" href="{{ path('browse_categories') }}"><i class="plus icon"></i>My Subscriptions</a>
+                    <a class="item" href="{{ path('browse_ads') }}"><i class="history icon"></i>My Ad History</a>
+                    <div class="divider"></div>
+                    <div class="header">your user</div>
+                    <a class="item" href="{{ path('view_user') }}"><i class="user icon"></i>View user</a>
+                    <a class="item" href="{{ path('edit_user') }}"><i class="edit icon"></i>Edit user</a>
+                    <a class="item" href="{{ path('browse_messages') }}"><i class="comment icon"></i>My Messages</a>
+                    <a class="item" href="{{ path('logout') }}"><i class="sign-out icon"></i>Logout</a>
+                </div>
+            </div>
+            <div class="ui simple dropdown item">
+                Admin <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="{{ path('add_categories') }}">Create a Category</a>
+                    <a class="item" href="{{ path('browse_users') }}">Users Management</a>
+                    <a class="item" href="{{ path('browse_categories') }}">Subscriptions</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% block body %}{% endblock %}
+
+
+<div class="ui inverted vertical footer segment">
+    <div class="ui center aligned container">
+        <div class="ui stackable inverted divided grid">
+            <div class="three wide column">
+                <h4 class="ui inverted header">Group 1</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Link One</a>
+                    <a href="#" class="item">Link Two</a>
+                    <a href="#" class="item">Link Three</a>
+                    <a href="#" class="item">Link Four</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">Group 2</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Link One</a>
+                    <a href="#" class="item">Link Two</a>
+                    <a href="#" class="item">Link Three</a>
+                    <a href="#" class="item">Link Four</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">Group 3</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Link One</a>
+                    <a href="#" class="item">Link Two</a>
+                    <a href="#" class="item">Link Three</a>
+                    <a href="#" class="item">Link Four</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header">Footer Header</h4>
+                <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <img src="{{ asset('images/logo.png') }}" class="ui centered mini image">
+        <div class="ui horizontal inverted small divided link list">
+            <a class="item" href="#">Site Map</a>
+            <a class="item" href="#">Contact Us</a>
+            <a class="item" href="#">Terms and Conditions</a>
+            <a class="item" href="#">Privacy Policy</a>
+        </div>
+    </div>
+</div>
+{% block javascripts %}{% endblock %}
+</body>
 </html>
+
