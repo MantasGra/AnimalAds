@@ -15,7 +15,7 @@ class SecurityController extends AbstractController
      */
     public function login()
     {
-        return $this->render('login.html.twig');
+        return $this->render('security/login.html.twig');
     }
 
     /**
@@ -23,7 +23,23 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-        return $this->render('login.html.twig');
+        return $this->render('security/login.html.twig');
+    }
+
+    /**
+     * @Route(path="/register", name="register")
+     */
+    public function register()
+    {
+        return $this->render('security/register.html.twig');
+    }
+
+    /**
+     * @Route(path="/reset-password", name="forgot-password")
+     */
+    public function reset()
+    {
+        return $this->render('security/forgot-password.html.twig');
     }
 
 }

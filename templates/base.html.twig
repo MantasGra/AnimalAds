@@ -49,12 +49,21 @@
                     <a class="item" href="{{ path('browse_ads') }}"><i class="dollar sign icon"></i>My Ads</a>
                     <a class="item" href="{{ path('browse_animals') }}"><i class="heart icon"></i>My Animals</a>
                     <a class="item" href="{{ path('browse_categories') }}"><i class="plus icon"></i>My Subscriptions</a>
+                    <a class="item" href="{{ path('browse_ads') }}"><i class="history icon"></i>My Ad History</a>
                     <div class="divider"></div>
-                    <div class="header">your profile</div>
-                    <a class="item" href="{{ path('view_profile') }}"><i class="user icon"></i>View Profile</a>
-                    <a class="item" href="{{ path('edit_profile') }}"><i class="edit icon"></i>Edit Profile</a>
-                    <a href="{{ path('browse_messages') }}" class="item"><i class="comment icon"></i>My Messages</a>
+                    <div class="header">your user</div>
+                    <a class="item" href="{{ path('view_user') }}"><i class="user icon"></i>View user</a>
+                    <a class="item" href="{{ path('edit_user') }}"><i class="edit icon"></i>Edit user</a>
+                    <a class="item" href="{{ path('browse_messages') }}"><i class="comment icon"></i>My Messages</a>
                     <a class="item" href="{{ path('logout') }}"><i class="sign-out icon"></i>Logout</a>
+                </div>
+            </div>
+            <div class="ui simple dropdown item">
+                Admin <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="{{ path('add_categories') }}">Create a Category</a>
+                    <a class="item" href="{{ path('browse_users') }}">Users Management</a>
+                    <a class="item" href="{{ path('browse_categories') }}">Subscriptions</a>
                 </div>
             </div>
         </div>

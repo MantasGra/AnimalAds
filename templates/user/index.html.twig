@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body %}
+    <div class="ui main text container">
+        <h1 class="ui header">All Users</h1>
+        <h3>Do whatever you want: mash 'em, boil 'em, fry 'em, cook 'em</h3>
+        <table class="ui celled table">
+            <thead>
+            <tr><th>Name</th>
+                <th>Age</th>
+                <th>Job</th>
+                <th>Action</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+                <td data-label="Name">James</td>
+                <td data-label="Age">24</td>
+                <td data-label="Job">Engineer</td>
+                <td data-label="Action">
+                    <a class="ui button">View</a>
+                    <a class="ui button">Edit</a>
+                    <a class="ui button">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td data-label="Name">Jill</td>
+                <td data-label="Age">26</td>
+                <td data-label="Job">Engineer</td>
+                <td data-label="Action">
+
+                </td>
+            </tr>
+            <tr>
+                <td data-label="Name">Elyse</td>
+                <td data-label="Age">24</td>
+                <td data-label="Job">Designer</td>
+                <td data-label="Action">
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

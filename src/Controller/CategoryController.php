@@ -16,4 +16,14 @@ class CategoryController extends AbstractController
             'controller_name' => 'CategoryController',
         ]);
     }
+
+    /**
+     * @Route("/categories/new", name="add_categories")
+     */
+    public function add()
+    {
+        return $this->render('category/add.html.twig', [
+            'controller_name' => 'CategoryController',
+        ]);
+    }
 }
