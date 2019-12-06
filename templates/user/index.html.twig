@@ -3,44 +3,84 @@
 {% block title %}Users{% endblock %}
 
 {% block body %}
+    <div class="ui tiny modal">
+        <div class="ui header">
+            Are you sure you want to delete this user?
+        </div>
+        <div class="content">
+            <form class="ui form">
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox">
+                        <label>Save a backup copy of user data.</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui red cancel button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <div class="ui green ok button">
+                <i class="checkmark icon"></i>
+                Yes
+            </div>
+        </div>
+    </div>
     <div class="ui main text container">
         <h1 class="ui header">All Users</h1>
         <h3>Do whatever you want: mash 'em, boil 'em, fry 'em, cook 'em</h3>
         <table class="ui celled table">
             <thead>
             <tr><th>Name</th>
-                <th>Age</th>
-                <th>Job</th>
+                <th>Surname</th>
+                <th>Email</th>
                 <th>Action</th>
             </tr></thead>
             <tbody>
             <tr>
                 <td data-label="Name">James</td>
-                <td data-label="Age">24</td>
-                <td data-label="Job">Engineer</td>
+                <td data-label="Surname">Harden</td>
+                <td data-label="Email">james.harden@email.com</td>
                 <td data-label="Action">
                     <a class="ui button">View</a>
-                    <a class="ui button">Edit</a>
-                    <a class="ui button">Remove</a>
+                    <a class="ui button">Message</a>
+                    <a class="negative ui button" onClick="openModal()">Remove</a>
                 </td>
             </tr>
             <tr>
                 <td data-label="Name">Jill</td>
-                <td data-label="Age">26</td>
-                <td data-label="Job">Engineer</td>
+                <td data-label="Age">Destructor</td>
+                <td data-label="Email">jillyd@email.com</td>
                 <td data-label="Action">
-
+                    <a class="ui button">View</a>
+                    <a class="ui button">Message</a>
+                    <a class="negative ui button" onClick="openModal()">Remove</a>
                 </td>
             </tr>
             <tr>
                 <td data-label="Name">Elyse</td>
-                <td data-label="Age">24</td>
-                <td data-label="Job">Designer</td>
+                <td data-label="Age">Jungler</td>
+                <td data-label="JEmail">jungle.or.feed@email.com</td>
                 <td data-label="Action">
-
+                    <a class="ui button">View</a>
+                    <a class="ui button">Message</a>
+                    <a class="negative ui button" onClick="openModal()">Remove</a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function openModal()
+        {
+            $('.tiny.modal')
+                .modal('show')
+                ;
+        }
+    </script>
 {% endblock %}
