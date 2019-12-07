@@ -18,7 +18,7 @@
         }
 
         .main.container {
-            margin-top: 7em;
+            margin-top: 1em;
         }
 
         .wireframe {
@@ -28,6 +28,9 @@
         .ui.footer.segment {
             margin: 5em 0em 0em;
             padding: 5em 0em;
+        }
+        .hidden-top {
+            height: 80px;
         }
     </style>
 </head>
@@ -70,6 +73,18 @@
 
     </div>
 </div>
+<div class="hidden-top"></div>
+{% for message in app.flashes('info') %}
+    <div class="ui top-margin container">
+        <div class="ui info message">
+            <div class="header">
+                <i class="info icon"></i>
+                Info
+            </div>
+            <p>{{ message }}</p>
+        </div>
+    </div>
+{% endfor %}
 {% block body %}{% endblock %}
 
 

@@ -73,6 +73,12 @@ class Ad
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="createdAds")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $createdBy;
+
     public function __construct()
     {
         $this->hidden = false;
@@ -254,6 +260,18 @@ class Ad
                 $comment->setAd(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

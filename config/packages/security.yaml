@@ -1,24 +1,14 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     encoders:
-        App\Entity\User: 'auto'
-        App\Security\User2:
-            algorithm: auto
-        App\Entity\User3:
-            algorithm: auto
-
+        App\Entity\User:
+            algorithm: 'auto'
 
     providers:
         custom:
             entity:
                 class: App\Entity\User
                 property: email
-        # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            entity:
-                class: App\Entity\User3
-                property: email
-        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -30,7 +20,7 @@ security:
                 authenticators:
                     - App\Security\UserAuthenticator
             logout:
-                path: app_logout
+                path: logout
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -43,5 +33,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

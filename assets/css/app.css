@@ -87,3 +87,10 @@ body>.grid {
 .ui.inverted.button {
     margin-left: 5px !important;
 }
+.top-margin {
+    margin-top: 80px !important;
+}
+.hidden-top {
+    height: 80px;
+    width: 100%;
+}
