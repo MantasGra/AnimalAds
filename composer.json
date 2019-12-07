@@ -5,8 +5,10 @@
         "php": "^7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "plumtreesystems/file-bundle": "^0.0.2",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.3.*",
+        "symfony/config": "4.3.*",
         "symfony/console": "4.3.*",
         "symfony/dotenv": "4.3.*",
         "symfony/expression-language": "4.3.*",
@@ -29,6 +31,7 @@
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
@@ -69,6 +72,12 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "reset-db": [
+            "php bin/console doctrine:database:drop --force && echo 'db dropped' || echo 'db does not exist'",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:migration:migrate",
+            "php bin/console doctrine:fixtures:load"
         ]
     },
     "conflict": {
