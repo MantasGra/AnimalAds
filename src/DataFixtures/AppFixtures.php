@@ -31,18 +31,22 @@ class AppFixtures extends Fixture
 
         $manager->persist($admin);
 
-        $user = new User();
+        for($i=0; $i < 10; $i++)
+        {
+            $user = new User();
 
-        $password = $this->encoder->encodePassword($user, '123456789');
-        $user
-            ->setEmail('user@animal.ads')
-            ->setPassword($password)
-            ->setEnabled(true)
-            ->setGender('unknown')
-        ;
+            $password = $this->encoder->encodePassword($user, '123456789');
+            $user
+                ->setEmail('user'.$i.'@animal.ads')
+                ->setPassword($password)
+                ->setEnabled(true)
+                ->setGender('unknown')
+            ;
 
-        $manager->persist($user);
+            $manager->persist($user);
 
-        $manager->flush();
+            $manager->flush();
+        }
+        
     }
 }

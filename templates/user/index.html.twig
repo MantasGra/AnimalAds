@@ -39,38 +39,23 @@
                 <th>Action</th>
             </tr></thead>
             <tbody>
+            {% for user in pagination %}
             <tr>
-                <td data-label="Name">James</td>
-                <td data-label="Surname">Harden</td>
-                <td data-label="Email">james.harden@email.com</td>
+                <td data-label="Name">{{ user.firstName }}</td>
+                <td data-label="Surname">{{ user.lastName }}</td>
+                <td data-label="Email">{{ user.email }}</td>
                 <td data-label="Action">
                     <a class="ui button">View</a>
                     <a class="ui button">Message</a>
                     <a class="negative ui button" onClick="openModal()">Remove</a>
                 </td>
             </tr>
-            <tr>
-                <td data-label="Name">Jill</td>
-                <td data-label="Age">Destructor</td>
-                <td data-label="Email">jillyd@email.com</td>
-                <td data-label="Action">
-                    <a class="ui button">View</a>
-                    <a class="ui button">Message</a>
-                    <a class="negative ui button" onClick="openModal()">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td data-label="Name">Elyse</td>
-                <td data-label="Age">Jungler</td>
-                <td data-label="JEmail">jungle.or.feed@email.com</td>
-                <td data-label="Action">
-                    <a class="ui button">View</a>
-                    <a class="ui button">Message</a>
-                    <a class="negative ui button" onClick="openModal()">Remove</a>
-                </td>
-            </tr>
+            {% endfor %}
             </tbody>
         </table>
+        <div class="ui right floated pagination menu">
+        {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
 {% endblock %}
 
