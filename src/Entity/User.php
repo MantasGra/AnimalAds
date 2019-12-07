@@ -131,6 +131,11 @@ class User implements UserInterface
      */
     private $enabled;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true)
+     */
+    private $createdAds;
+
     public function __construct()
     {
         $this->enabled = false;
@@ -143,6 +148,7 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
+        $this->createdAds = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -584,6 +590,37 @@ class User implements UserInterface
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ad[]
+     */
+    public function getCreatedAds(): Collection
+    {
+        return $this->createdAds;
+    }
+
+    public function addCreatedAd(Ad $createdAd): self
+    {
+        if (!$this->createdAds->contains($createdAd)) {
+            $this->createdAds[] = $createdAd;
+            $createdAd->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedAd(Ad $createdAd): self
+    {
+        if ($this->createdAds->contains($createdAd)) {
+            $this->createdAds->removeElement($createdAd);
+            // set the owning side to null (unless already changed)
+            if ($createdAd->getCreatedBy() === $this) {
+                $createdAd->setCreatedBy(null);
+            }
+        }
 
         return $this;
     }
