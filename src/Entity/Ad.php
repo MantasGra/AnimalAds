@@ -79,6 +79,12 @@ class Ad
      */
     private $createdBy;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Animal", inversedBy="ad", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $animal;
+
     public function __construct()
     {
         $this->hidden = false;
@@ -272,6 +278,18 @@ class Ad
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getAnimal(): ?Animal
+    {
+        return $this->animal;
+    }
+
+    public function setAnimal(Animal $animal): self
+    {
+        $this->animal = $animal;
 
         return $this;
     }

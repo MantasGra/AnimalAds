@@ -87,6 +87,11 @@ class Animal
      */
     private $createdBy;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Ad", mappedBy="animal", cascade={"persist", "remove"})
+     */
+    private $ad;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -256,6 +261,23 @@ class Animal
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getAd(): ?Ad
+    {
+        return $this->ad;
+    }
+
+    public function setAd(Ad $ad): self
+    {
+        $this->ad = $ad;
+
+        // set the owning side of the relation if necessary
+        if ($ad->getAnimal() !== $this) {
+            $ad->setAnimal($this);
+        }
 
         return $this;
     }

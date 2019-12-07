@@ -1,15 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}Edit Profile{% endblock %}
 
 {% block body %}
     <div class="ui main text container">
         <h1 class="ui header">Edit Profile</h1>
-        <h3>Edit your profile</h3>
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div class="ui divider"></div>
+        {{ form_start(form, { 'attr': {'class': 'ui large form'}}) }}
+
+        {% if error.current %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header" style="text-align: left">
+                    There was a problem
+                </div>
+                {% for err in error %}
+                    <p style="text-align: left">{{ err.messageTemplate }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="ui stacked segment">
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.firstName) }}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.lastName) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.gender) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.phone) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.country) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.city) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.address) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.birthDate) }}
+                </div>
+            </div>
+            <button class="ui fluid large teal submit button" id="login">Save</button>
+        </div>
+
+        <div class="ui error message"></div>
+
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}"
+        >
+
+
+        {{ form_end(form) }}
     </div>
 {% endblock %}
