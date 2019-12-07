@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -42,14 +43,28 @@ class RegistrationFormType extends AbstractType
                 ],
 
             ])
-            ->add('firstName')
-            ->add('lastName')
+            ->add('firstName', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'First name'
+                ]
+            ])
+            ->add('lastName', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Last name'
+                ]
+            ])
             ->add('gender', ChoiceType::class, [
                 'choices'  => [
+                    'Gender' => '',
                     'Male' => 'male',
                     'Female' => 'female',
                     'Non-binary' => null
-                ]])
+                ],
+                'data' => '',
+                'attr' => [
+                    'class' => 'ui dropdown'
+                ]
+            ])
             ;
     }
 
