@@ -136,6 +136,16 @@ class User implements UserInterface
      */
     private $createdAds;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $tempToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $tempPasswordToken;
+
     public function __construct()
     {
         $this->enabled = false;
@@ -628,6 +638,30 @@ class User implements UserInterface
     public function persistCreatedAds()
     {
         $this->createdAds = clone $this->createdAds;
+    }
+    
+    public function getTempToken(): ?string
+    {
+        return $this->tempToken;
+    }
+
+    public function setTempToken(?string $tempToken): self
+    {
+        $this->tempToken = $tempToken;
+
+        return $this;
+    }
+
+    public function getTempPasswordToken(): ?string
+    {
+        return $this->tempPasswordToken;
+    }
+
+    public function setTempPasswordToken(?string $tempPasswordToken): self
+    {
+        $this->tempPasswordToken = $tempPasswordToken;
+
+        return $this;
     }
 
 }
