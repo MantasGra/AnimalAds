@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animals!{% endblock %}
+
+{% block body %}
+    <div class="ui main text container">
+        <h1 class="ui header">Boost post</h1>
+        <div class="ui segment">
+            <p>Boosting post: SUCH GOOD POST</p>
+            <p>Please select your boost options, before you proceed to payment.</p>
+        </div>
+        <form class="ui form">
+            <div class="two fields">
+                <div class="field">
+                    <label>Start Date</label>
+                    <input type="date">
+                </div>
+                <div class="field">
+                    <label>Duration</label>
+                    <select class="ui fluid dropdown">
+                        <option value="">Choose duration</option>
+                        <option value="1">1 day</option>
+                        <option value="3">3 days</option>
+                        <option value="7">1 week</option>
+                        <option value="30">1 month</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label>
+                    Boost type
+                   <i class="small circular info icon link"></i>
+                    <div class="ui special popup">
+                        <p><strong>Premium boost</strong> - makes sure your advertisment is on the top of all ad lists and hightlights your ad.</p>
+                        <p><strong>Basic boost</strong> - highlights your advertisment to stand out amongst others.
+                    </div>
+                </label>
+                <select class="ui fluid dropdown">
+                    <option value="premium">Premium</option>
+                    <option value="basic">Basic</option>
+                </select>
+            </div>
+            <button type="submit" class="ui primary right floated button">Proceed to payment</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $('.info')
+        .popup({
+        inline: true,
+        });
+    $('.ui.dropdown').dropdown();
+</script>
+{% endblock %}

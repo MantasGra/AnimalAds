@@ -32,4 +32,20 @@ class AdController extends AbstractController
     {
         return $this->render('ad/add.html.twig');
     }
+
+    /**
+     * @Route(path="/ads/report", name="report_ad")
+     */
+    public function report()
+    {
+        return $this->render('ad/report.html.twig');
+    }
+
+    /**
+     * @Route(path="/ads/boost", name="boost_ad")
+     */
+    public function boost()
+    {
+        return $this->render('ad/boost.html.twig');
+    }
 }
