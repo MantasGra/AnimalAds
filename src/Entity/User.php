@@ -132,7 +132,7 @@ class User implements UserInterface
     private $enabled;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $createdAds;
 
@@ -623,6 +623,11 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function persistCreatedAds()
+    {
+        $this->createdAds = clone $this->createdAds;
     }
 
 }

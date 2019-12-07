@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\User;
 
 class UserController extends AbstractController
 {
@@ -49,6 +50,27 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig', [
             'pagination' => $pagination
         ]);
+    }
+
+
+    /**
+     * @Route("/users/remove", name="remove_user")
+     */
+    public function remove(Request $request)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($request->get('userId'));
+        if ($request->get('save'))
+        {
+            $deletedManager = $this->getDoctrine()->getManager('deleted_users');
+            $user->persistCreatedAds();
+            $deletedManager->persist($user);
+            $deletedManager->flush();
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('browse_users');
     }
 
 }
