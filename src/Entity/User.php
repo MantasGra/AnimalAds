@@ -87,7 +87,7 @@ class User implements UserInterface
     private $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Animal", mappedBy="createdBy", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Animal", mappedBy="createdBy", orphanRemoval=true, cascade={"persist"})
      */
     private $animals;
 
@@ -97,12 +97,12 @@ class User implements UserInterface
     private $subscriptions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SavedAd", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\SavedAd", mappedBy="user", orphanRemoval=true)
      */
     private $savedAds;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ViewedAd", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\ViewedAd", mappedBy="user", orphanRemoval=true)
      */
     private $viewedAds;
 
@@ -132,7 +132,7 @@ class User implements UserInterface
     private $enabled;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $createdAds;
 
@@ -635,6 +635,11 @@ class User implements UserInterface
         return $this;
     }
 
+    public function persistCreatedAds()
+    {
+        $this->createdAds = clone $this->createdAds;
+    }
+    
     public function getTempToken(): ?string
     {
         return $this->tempToken;

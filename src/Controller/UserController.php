@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class UserController extends AbstractController
 {
@@ -43,11 +44,45 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="browse_users")
      */
-    public function index()
+    public function index(PaginatorInterface $paginator, Request $request)
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $query = $queryBuilder->select('u')
+                    ->from('App:User', 'u')
+                    ->getQuery();
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+
         return $this->render('user/index.html.twig', [
-            'controller_name' => 'userController',
+            'pagination' => $pagination
         ]);
+    }
+
+
+    /**
+     * @Route("/users/remove", name="remove_user")
+     */
+    public function remove(Request $request)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($request->get('userId'));
+        if ($request->get('save'))
+        {
+            $deletedManager = $this->getDoctrine()->getManager('deleted_users');
+            $user->persistCreatedAds();
+            $deletedManager->persist($user);
+            $deletedManager->flush();
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('browse_users');
     }
 
     /**
