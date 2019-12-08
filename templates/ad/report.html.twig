@@ -6,16 +6,15 @@
     <div class="ui main text container">
         <h1 class="ui header">Sending report</h1>
         <div class="ui segment">
-            <p>Sending report about the following post: INAPPROPRIATE.</p>
+            <p>Sending report about the following post: {{ ad.title }}.</p>
             <p>Please provide details about why you think this post is unacceptable and we will be sure to review it.</p>
         </div>
-        <form class="ui form">
+        {{ form_start(form, {'attr': {'class': 'ui form'}}) }}
             <div class="field">
-                <label>Report message</label>
-                <textarea></textarea>
+                {{ form_row(form.reportMessage) }}
             </div>
             <button class="ui primary right floated button" type="submit">Send</button>
-        </form>
+        {{ form_end(form) }}
         
     </div>
 {% endblock %}
