@@ -19,7 +19,7 @@
         <p>Birth Date: {{ user.birthDate|date('Y-m-d') }}</p>
         <p>Subscribed categories:
             {% for category in user.categories %}
-                {{ category }}
+                {{ category.name }}
             {% endfor %}
         </p>
     </div>

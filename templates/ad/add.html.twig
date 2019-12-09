@@ -1,18 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Animals!{% endblock %}
+{% block title %}Animals!
+{% endblock %}
 
 {% block body %}
-    <div class="ui main text container">
-        <h1 class="ui header">Add your own Ad</h1>
-        <h3>Choose category</h3>
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-        <ul>
+	{{ form_start(adForm, { 'attr': {'class': 'ui large form'}}) }}
+{{form_errors(adForm)}}
+	<div class="ui main text container">
+		<h1 class="ui header">Add your own Ad</h1>
+	
+			<div class="field">
+				<label>Title</label>
+				{{ form_widget(adForm.title) }}
+			</div>
 
-        </ul>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
+			{#<div class="field">
+				<label>Category</label>
+				<select class="ui selection dropdown">
+					<option value="">Lorem Ipsum</option>
+				</select>
+			</div>#}
+
+			<div class="field">
+				<label>Price</label>
+				{{ form_widget(adForm.price) }}
+			</div>
+			<div class="field">
+				<label>Description</label>
+				{{ form_widget(adForm.description) }}
+			</div>
+			<div class="field">
+				<div class="ui checkbox">
+
+					{{ form_widget(adForm.hidden) }}
+					<label>Is Ad hidden?</label>
+				</div>
+			</div>
+
+			<div class="field">
+				<label>Type</label>
+				{{ form_widget(adForm.type) }}
+			</div>
+
+			<div class="field">
+				<label>Animal</label>
+				{{ form_widget(adForm.animal) }}
+			</div>
+			<button class="ui button">Submit</button>
+		
+
+	</div>
+	{{ form_end(adForm) }}
 {% endblock %}

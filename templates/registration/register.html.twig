@@ -9,7 +9,7 @@
             </div>
         </h2>
         {{ form_start(registrationForm, { 'attr': {'class': 'ui large form'}}) }}
-
+ {{ form_errors(registrationForm.category) }}
         {% if error.current %}
             <div class="ui negative message">
                 <i class="close icon"></i>
