@@ -3,16 +3,67 @@
 {% block title %}Categories{% endblock %}
 
 {% block body %}
-    <div class="ui main text container">
-        <a class="ui right floated button">Add</a>
-        <h1 class="ui header">Categories</h1>
-        <h3>Best profile ever.</h3>
-        Category one
-        <a class="ui right floated button">Edit</a>
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="ui tiny modal" id="remove-category-dialog">
+        <div class="ui header">
+            Are you sure you want to delete this category?
+        </div>
+        <div class="content">
+            <form class="ui form" id="thisform" action="{{ path('remove_category',{'id' : pagination.count}) }}" method="post">
+
+                <input type="hidden" name="categoryId" id="categoryId" value="">
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui red cancel button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <button type="submit" class="ui green ok button" form="thisform">
+                <i class="checkmark icon"></i>
+                Yes
+            </button>
+        </div>
     </div>
+    </form>
+<div class="ui main text container">
+    <h1 class="ui header">All Categories</h1>
+    <a class="ui primary right floated button" href="{{ path('add_categories') }}">Add category</a>
+    <h3>Do whatever you want: mash 'em, boil 'em, fry 'em, cook 'em</h3>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for category in pagination %}
+        <tr>
+            <td data-label="Name">{{ category.name }}</td>
+            <td data-label="Description">{{ category.description }}</td>
+
+            <td data-label="Action">
+                <a class="ui button" href="{{ path('view_category',{'id' : category.id}) }}">View</a>
+                <a class="ui button" href="{{ path('edit_categories',{'id' : category.id}) }}">Edit</a>
+                <a class="open-modal negative ui button" data-id="{{ category.id }}" href="#remove-user-dialog">Remove</a>
+            </td>
+        </tr>
+{% endfor %}
+        </tbody>
+    </table>
+    <div class="ui right floated pagination menu">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).on("click", ".open-modal", function () {
+            var categoryId = $(this).data('id');
+            $(".ui.modal #categoryId").val(categoryId);
+            $('.tiny.modal').modal('show');
+        });
+    </script>
 {% endblock %}
