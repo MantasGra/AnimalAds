@@ -1,28 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Animals!{% endblock %}
+{% block title %}Animals!
+{% endblock %}
 
 {% block body %}
-    <div class="ui main text container">
-        <a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an ad</a>
-        <h1 class="ui header">Check out those Ads</h1>
-        <div class="ui icon input">
-            <input class="prompt" type="text" placeholder="Search..." autocomplete="off">
-            <i class="search icon"></i>
-        </div>
-        <h3>Wow cute pet.</h3>
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-        <ul>
-            <li>
-                Ad 1  -  Category 1
-            <a class="ui button right floated">Save</a>
-            <a class="ui button right floated">Subscribe Category</a>
-            <a class="ui button right floated" href="{{ path('view_ad') }}">Read More</a>
+<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
+	<div class="ui main text container">
+		<div class="ui relaxed divided list">
+			{% for ad in pagination %}
+				<div class="item">
+					<div class="content">
+						<a href="{{ path('view_ad',{'id': ad.id}) }}" class="header">{{ ad.title }} - {{ad.price}}$</a>
+						<div class="description">Uploaded
+							{{ ad.createdAt|date("m/d/Y") }}, viewed {{ ad.viewCount}} times</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
 
-        </ul>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
+		<div class="ui right floated pagination menu">
+			{{ knp_pagination_render(pagination) }}
+		</div>
+
+	</div>
+
+
 {% endblock %}

@@ -9,24 +9,44 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 class AdController extends AbstractController
 {
     /**
      * @Route(path="/ads", name="browse_ads")
      */
-    public function index()
+    public function index(PaginatorInterface $paginator, Request $request)
     {
-        return $this->render('ad/index.html.twig');
+        $entityManager = $this->getDoctrine()->getManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $query = $queryBuilder->select('u')
+                    ->from('App:Ad', 'u')
+                    ->getQuery();
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('ad/index.html.twig', [
+            'pagination' => $pagination
+        ]);
+       
     }
 
     /**
-     * @Route(path="/ads/1", name="view_ad")
+     * @Route(path="/ads/{id}", name="view_ad")
      */
-    public function view()
+    public function view($id)
     {
-        return $this->render('ad/view.html.twig');
+        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+
+        return $this->render('ad/view.html.twig', [
+            'ad' => $ad
+        ]);
     }
 
     /**
@@ -48,6 +68,7 @@ class AdController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ad);
             $entityManager->flush();
+
             return $this->render('ad/index.html.twig');
         }
         return $this->render('ad/add.html.twig', [
