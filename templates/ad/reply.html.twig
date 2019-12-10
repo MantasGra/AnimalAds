@@ -6,7 +6,7 @@
 {% block body %}
 	<div class="ui main text container">
 		<h3 class="ui dividing header">Reply to a comment</h3>
-		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submitcontact', {'id': id}), 'method': 'POST'}) }}
+		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submitreply', {'id': id, 'parent': parent}), 'method': 'POST'}) }}
 		{% if error.current %}
 			<div class="ui negative message">
 				<i class="close icon"></i>
