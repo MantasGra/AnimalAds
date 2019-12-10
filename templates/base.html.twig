@@ -101,6 +101,17 @@
         </div>
     </div>
 {% endfor %}
+{% for message in app.flashes('warning') %}
+    <div class="ui top-margin container">
+        <div class="ui warning message">
+            <div class="header">
+                <i class="check icon"></i>
+                Warning
+            </div>
+            <p>{{ message }}</p>
+        </div>
+    </div>
+{% endfor %}
 {% if app.user and not app.user.enabled %}
     <div class="ui top-margin container">
         <div class="ui info message">
