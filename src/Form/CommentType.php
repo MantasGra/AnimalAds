@@ -26,18 +26,6 @@ class CommentType extends AbstractType
             ])
         ;
     }
-    public function getText(){
-        return $this->text;
-    }
-
-    public function setText($text){
-        $this->text = $text;
-    }
-    public function __constructor($formname)
-    {
-        $this->text = $formname;
-        parent::__construct();
-    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
