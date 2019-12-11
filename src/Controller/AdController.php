@@ -26,20 +26,21 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route(path="/ads/1", name="view_ad")
+     * @Route(path="/ads/{id}", name="view_ad")
      */
-    public function view()
+    public function view($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
         // Find all comments for {id} ad
         $comments = $entityManager->getRepository('App:Comment')->findBy(
-            ['ad' => '1', 'parentComment' => null]
+            ['ad' => $id, 'parentComment' => null]
         );
         // Form for new comment
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         // Render view template
         return $this->render('ad/view.html.twig', [
+            'id' => $id,
             'cmts' => $comments,    // Send gathered comments to view template
             'form' => $form->createView(),  // Send created form to view template
             'error' => $form->getErrors(true)
@@ -90,12 +91,12 @@ class AdController extends AbstractController
             // Flash a success message
             $this->addFlash('success', 'Your reply was added');
             // Render view template
-            return $this->redirectToRoute('view_ad');
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Flash a warning message
         $this->addFlash('warning', 'Something went wrong');
         // Render view template
-        return $this->redirectToRoute('view_ad');
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**
@@ -149,12 +150,12 @@ class AdController extends AbstractController
             // Flash a success message
             $this->addFlash('success', 'Your message was sent');
             // Render view template
-            return $this->redirectToRoute('view_ad');
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Flash a warning message
         $this->addFlash('warning', 'Something went wrong');
         // Render view template
-        return $this->redirectToRoute('view_ad');
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**
@@ -196,12 +197,12 @@ class AdController extends AbstractController
                 // Flash a success message
                 $this->addFlash('success', 'Your comment was changed');
                 // Render view template
-                return $this->redirectToRoute('view_ad');
+                return $this->redirectToRoute('view_ad', array('id' => $id));
             }
             // Flash a warning message
             $this->addFlash('warning', 'Something went wrong');
             // Render view template
-            return $this->redirectToRoute('view_ad');
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Flash a warning message
         $this->addFlash('warning', 'You are not the author of the comment.');
@@ -234,20 +235,20 @@ class AdController extends AbstractController
             // Flash a success message
             $this->addFlash('success', 'Your comment was added');
             // Render view template
-            return $this->redirectToRoute('view_ad');
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Flash a warning message
         $this->addFlash('warning', 'Something went wrong');
         // Render view template
-        return $this->redirectToRoute('view_ad');
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**
-     * @Route(path="/ads/{adid}/{id}/deletecomment/", name="deletecomment")
+     * @Route(path="/ads/{id}/{commid}/deletecomment/", name="deletecomment")
      */
-    public function deleteComment(Request $request, $id){
+    public function deleteComment(Request $request, $id, $commid){
         // Get commid comment
-        $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
         // Check if the comment was written by current {user}
         if ($comment->getWrittenBy()->getId() == $this->getUser()->getId()) {
             // Check if the comment has any children comments
@@ -259,17 +260,17 @@ class AdController extends AbstractController
                 // Flash a success message
                 $this->addFlash('success', 'Your comment was deleted');
                 // Render view template
-                return $this->redirectToRoute('view_ad');
+                return $this->redirectToRoute('view_ad', array('id' => $id));
             }
             // Flash a warning message
             $this->addFlash('warning', 'This comment has replies.');
             // Render view template
-            return $this->redirectToRoute('view_ad');
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Flash a warning message
         $this->addFlash('warning', 'You are not the author of the comment.');
         // Render view template
-        return $this->redirectToRoute('view_ad');
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**

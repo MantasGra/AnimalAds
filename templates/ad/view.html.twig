@@ -6,7 +6,7 @@
 {% block body %}
 	<div class="ui main text container">
 		<h1 class="ui header">Ad 1 title</h1>
-		<a class="ui primary right floated button" href="{{ path('contact', {'id': '1'}) }}">Message seller</a>
+		<a class="ui primary right floated button" href="{{ path('contact', {'id': id}) }}">Message seller</a>
 		<a class="ui primary right floated button">Save Ad</a>
 		<a class="ui primary right floated button">Subscribe Category</a>
 		<a class="ui green button right floated" href="{{ path('boost_ad') }}">Boost</a>
@@ -24,7 +24,7 @@
 			{% for comment in cmts %}
 				{% if comment.parentComment is null %}
 					<div class="comment">
-						<div class="content">
+						<div style="padding-bottom: 0.5em" class="content">
 							<a class="author">{{comment.writtenBy.firstName}}
 								{{comment.writtenBy.lastName}}
 								({{comment.writtenBy.email}})</a>
@@ -37,16 +37,16 @@
 							{% if comment.getReplies()|length == 0 %}
 								{% if app.user %}
 									{% if comment.writtenBy.id == app.user.id %}
-										<div class="actions">
-											<a class="reply" href="{{ path('editcomment', {'id': '1','commid': comment.id}) }}">Edit</a>
-											<a class="reply" href="{{ path('deletecomment', {'adid': '1','id': comment.id}) }}">Delete</a>
+										<div style="padding-bottom: 1em;" class="actions">
+											<a class="reply" href="{{ path('editcomment', {'id': id,'commid': comment.id}) }}">Edit</a>
+											<a class="reply" href="{{ path('deletecomment', {'id': id,'commid': comment.id}) }}">Delete</a>
 										</div>
 									{% endif %}
 								{% endif %}
 							{% endif %}
 						</div>
 						{% for reply in comment.getReplies() %}
-							<div class="comments">
+							<div style="padding-bottom: 0.3em; padding-top: 0.3em;" class="comments">
 								<div class="comment">
 									<div class="content">
 										<a class="author">{{reply.writtenBy.firstName}}
@@ -61,8 +61,8 @@
 										{% if app.user %}
 											{% if reply.writtenBy.id == app.user.id %}
 												<div class="actions">
-													<a class="reply" href="{{ path('editcomment', {'id': '1','commid': reply.id}) }}">Edit</a>
-													<a class="reply" href="{{ path('deletecomment', {'adid': '1','id': reply.id}) }}">Delete</a>
+													<a class="reply" href="{{ path('editcomment', {'id': id,'commid': reply.id}) }}">Edit</a>
+													<a class="reply" href="{{ path('deletecomment', {'id': id,'commid': reply.id}) }}">Delete</a>
 												</div>
 											{% endif %}
 										{% endif %}
@@ -70,7 +70,7 @@
 								</div>
 							</div>
 						{% endfor %}
-						<div style="margin-left: 1.7em; margin-bottom: 2em;" class="actions">
+						<div style="margin-left: 1.7em; margin-bottom: 0em;" class="actions">
 							<a class="reply" href="{{ path('replycomment', {'id': '1','parent': comment.id}) }}">Reply</a>
 						</div>
 						<script>
@@ -80,7 +80,7 @@
 				{% endif %}
 			{% endfor %}
 			<h3 class="ui dividing header">Add a new comment</h3>
-			{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('comment', {'id': '1'}), 'method': 'POST'}) }}
+			{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('comment', {'id': id}), 'method': 'POST'}) }}
 			{% if error.current %}
 				<div class="ui negative message">
 					<i class="close icon"></i>
