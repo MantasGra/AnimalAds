@@ -46,7 +46,7 @@
 							{% endif %}
 						</div>
 						{% for reply in comment.getReplies() %}
-							<div style="padding-bottom: 0.3em; padding-top: 0.3em;" class="comments">
+							<div style="padding-bottom: 0.3em; margin-left: 1.3em; padding-top: 0.3em;" class="comments">
 								<div class="comment">
 									<div class="content">
 										<a class="author">{{reply.writtenBy.firstName}}
@@ -70,7 +70,7 @@
 								</div>
 							</div>
 						{% endfor %}
-						<div style="margin-left: 1.7em; margin-bottom: 0em;" class="actions">
+						<div style="margin-left: 2.7em; margin-bottom: 0em;" class="actions">
 							<a class="reply" href="{{ path('replycomment', {'id': '1','parent': comment.id}) }}">Reply</a>
 						</div>
 						<script>

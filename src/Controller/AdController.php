@@ -13,7 +13,6 @@ use App\Entity\Message;
 use App\Entity\Ad;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\PaginatorInterface;
 
 class AdController extends AbstractController
 {
@@ -118,7 +117,7 @@ class AdController extends AbstractController
     /**
      * @Route(path="/ads/{id}/contact/success", name="submitcontact")
      */
-    public function contactsubmit(Request $request, $id)
+    public function contactsubmit(Request $request, $id/*, \Swift_Mailer $mailer*/)
     {
         // Form for new message
         $message = new Message();
@@ -142,11 +141,12 @@ class AdController extends AbstractController
                 ->setTo($ad->getCreatedBy()->getEmail())
                 ->setBody(
                     $this->renderView(
-                        'message/email-message.html.twig'
+                        'message/email-message.html.twig',
+                        ['userEmail' => $ad->getCreatedBy()->getEmail()]
                     ),
                     'text/html'
                 );
-            $mailer->send($emailMessage);
+            //$mailer->send($emailMessage);
             // Flash a success message
             $this->addFlash('success', 'Your message was sent');
             // Render view template
