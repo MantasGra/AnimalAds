@@ -6,27 +6,39 @@
 {% block body %}
 
 
+	<div class="ui raised very padded text container segment">
+		<h2 class="ui header">{{ ad.title }}</h2>
+		<p>Price
+			<b>{{ad.price}}
+				$</b>
+		</p>
+		<p>Type
+			<b>{{ad.type}}</b>
+		</p>
+		<p>{{ad.description}}</p>
+		<p>Created at
+			<b>{{ad.createdAt|date()}}</b>
+		</p>
+		<p>Viewed
+			<b>{{ ad.viewCount}}
+				times</b>
+		</p>
+		<p>Author:
+			<b>{{ad.createdBy.email}}</b>
+		</p>
+	</div>
 
-
-	
-
-<div class="ui raised very padded text container segment">
-  <h2 class="ui header">{{ ad.title }}</h2>
-  <p>Price <b>{{ad.price}} $</b></p>
-  <p>Type <b>{{ad.type}}</b></p>
-  <p>{{ad.description}}</p>
-   <p>Created at <b>{{ad.createdAt|date()}}</b></p>
-  <p>Viewed <b>{{ ad.viewCount}} times</b></p>
-  <p>Author: <b>{{ad.createdBy.email}}</b></p>
-</div>
-	
 
 	<div class="ui main text container">
-<div class="ui buttons fluid">
-		<a class="ui primary right floated button">Save Ad</a>
-		<a class="ui secondary right floated button">Subscribe Category</a>
-		<a class="ui green button right floated" href="{{ path('boost_ad') }}">Boost</a>
-		<a class="ui red right floated button" href="{{ path('report_ad') }}">Report Ad</a>
-</div>
+		<div class="ui buttons fluid">
+			{% if savedAd == null %}
+				<a class="ui primary right floated button" href="{{ path('save_ad',{'id': ad.id}) }}">Save Ad</a>
+			{% else %}
+				<a class="ui right floated button" href="{{ path('forget_ad',{'id': ad.id}) }}">Forget Ad</a>
+			{% endif %}
+			<a class="ui secondary right floated button">Subscribe Category</a>
+			<a class="ui green button right floated" href="{{ path('boost_ad') }}">Boost</a>
+			<a class="ui red right floated button" href="{{ path('report_ad') }}">Report Ad</a>
+		</div>
 	</div>
 {% endblock %}
