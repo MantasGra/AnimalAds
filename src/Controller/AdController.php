@@ -38,7 +38,10 @@ class AdController extends AbstractController
         ]);
     }
 
-     /**
+
+
+
+    /**
      * @Route(path="/ads/new", name="add_ad")
      */
     public function add(Request $request)
@@ -144,6 +147,19 @@ class AdController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route(path="/ads/{id}/remove", name="remove_ad")
+     */
+    public function remove($id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+
+        $entityManager->remove($ad);
+        $entityManager->flush();
+        return $this->redirectToRoute('browse_ads');
+    }
+
 
     /**
      * @Route(path="/ads/{id}/forget", name="forget_ad")
@@ -188,9 +204,6 @@ class AdController extends AbstractController
             'savedAd' => $result[0]
         ]);
     }
-
-
-   
 
     /**
      * @Route(path="/ads/report", name="report_ad")

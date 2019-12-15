@@ -14,7 +14,9 @@
 						<div class="description">Uploaded
 							{{ ad.createdAt|date("m/d/Y") }}, viewed {{ ad.viewCount}} times</div>
 					</div>
+						<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
 				</div>
+		
 			{% endfor %}
 		</div>
 
