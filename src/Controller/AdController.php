@@ -38,7 +38,32 @@ class AdController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route(path="/ads/saved", name="browse_saved_ads")
+     */
+    public function savedAdsIndex(PaginatorInterface $paginator, Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
 
+        $query = $queryBuilder->select('u')
+        ->from('App:SavedAd', 'u')
+        ->where('u.user = :user')
+        ->setParameter('user', $this->getUser())
+        ->getQuery();
+   
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        
+        return $this->render('ad/index.html.twig', [
+            'pagination' => $pagination
+        ]);
+    }
 
 
     /**

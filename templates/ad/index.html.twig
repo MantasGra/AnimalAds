@@ -5,20 +5,44 @@
 
 {% block body %}
 	<div class="ui container">
-<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
-</div>
+		<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
+	</div>
 	<div class="ui main text container">
 		<div class="ui relaxed divided list">
 			{% for ad in pagination %}
-				<div class="item">
-					<div class="content">
-						<a href="{{ path('view_ad',{'id': ad.id}) }}" class="header">{{ ad.title }} - {{ad.price}}$</a>
-						<div class="description">Uploaded
-							{{ ad.createdAt|date("m/d/Y") }}, viewed {{ ad.viewCount}} times</div>
+				{% if ad.ad is defined %}
+					<div class="item">
+						<div class="content">
+							<a href="{{ path('view_ad',{'id': ad.ad.id}) }}" class="header">{{ ad.ad.title }}
+								-
+								{{ad.ad.price}}$</a>
+							<div class="description">Uploaded
+								{{ ad.ad.createdAt|date("m/d/Y") }}, viewed
+								{{ ad.ad.viewCount}}
+								times</div>
+						</div>
+						{% if ad.ad.createdBy ==  app.user  %}
+							<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.ad.id}) }}">Delete</a>
+						{% endif %}
 					</div>
-						<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
-				</div>
-		
+
+				{% else %}
+
+					<div class="item">
+						<div class="content">
+							<a href="{{ path('view_ad',{'id': ad.id}) }}" class="header">{{ ad.title }}
+								-
+								{{ad.price}}$</a>
+							<div class="description">Uploaded
+								{{ ad.createdAt|date("m/d/Y") }}, viewed
+								{{ ad.viewCount}}
+								times</div>
+						</div>
+						{% if ad.createdBy == app.user  %}
+							<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
+						{% endif %}
+					</div>
+				{% endif %}
 			{% endfor %}
 		</div>
 
