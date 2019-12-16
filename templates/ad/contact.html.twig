@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message to seller
+{% endblock %}
+
+{% block body %}
+	<div class="ui main text container">
+		<h3 class="ui dividing header">Message seller</h3>
+		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submitcontact', {'id': '1'}), 'method': 'POST'}) }}
+		{% if error.current %}
+			<div class="ui negative message">
+				<i class="close icon"></i>
+				<div class="header" style="text-align: left">
+					There was a problem
+				</div>
+				{% for err in error %}
+					<p style="text-align: left">{{ err.messageTemplate }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+		<div class="ui stacked segment">
+			<div class="field">
+				<div class="ui input reply form">
+					{{ form_widget(form.title) }}
+				</div>
+			</div>
+			<div class="field">
+				<div style="height: 5em" class="ui input reply form">
+					{{ form_widget(form.text) }}
+				</div>
+			</div>
+			<button class="ui primary submit labeled icon button" id="comment">
+				<i class="icon edit"></i>Message</button>
+		</div>
+		<div class="ui error message"></div>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

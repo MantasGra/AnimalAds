@@ -418,6 +418,9 @@
             "./config/routes.yaml"
         ]
     },
+    "symfony/security": {
+        "version": "v4.3.9"
+    },
     "symfony/security-bundle": {
         "version": "3.3",
         "recipe": {

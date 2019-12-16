@@ -2,10 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d73747b6-d05c-4436-aef4-d80d8748c027" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/AnimalAds.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AnimalAds.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SecurityController.php" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/AdController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AdController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/MessageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MessageController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ad/edit-comment.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ad/replyedit.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ad/reply.html.twig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ad/view.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ad/view.html.twig" afterDir="false" />
+>>>>>>> comments
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,6 +24,7 @@
   </component>
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+<<<<<<< HEAD
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -479,6 +489,11 @@
         </entry>
       </file>
     </leaf>
+=======
+    <execution>
+      <executable />
+    </execution>
+>>>>>>> comments
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -491,6 +506,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -548,6 +564,8 @@
       </list>
     </option>
   </component>
+=======
+>>>>>>> comments
   <component name="PhpServers">
     <servers>
       <server host="localhost" id="5bd47f08-2d1d-405d-826a-ecd9ccbf81bb" name="localhost" port="8080" use_path_mappings="true">
@@ -673,6 +691,7 @@
       <path value="$PROJECT_DIR$/vendor/symfony/security" />
       <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
       <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
+<<<<<<< HEAD
       <path value="$PROJECT_DIR$/vendor/knplabs/knp-paginator-bundle" />
       <path value="$PROJECT_DIR$/vendor/knplabs/knp-components" />
     </include_path>
@@ -822,15 +841,22 @@
       <pane id="Scope" />
     </panes>
   </component>
+=======
+      <path value="$PROJECT_DIR$/vendor/knplabs/knp-components" />
+      <path value="$PROJECT_DIR$/vendor/knplabs/knp-paginator-bundle" />
+    </include_path>
+  </component>
+  <component name="ProjectId" id="1Ukz6bGsf4BYunhtPhpdHcSTGtg" />
+>>>>>>> comments
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/security" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
-    <property name="settings.editor.selected.configurable" value="settings.php.debug.servers" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -874,9 +900,14 @@
       <workItem from="1573623009782" duration="3055000" />
       <workItem from="1573656738146" duration="312000" />
       <workItem from="1575710958219" duration="30871000" />
+      <workItem from="1575915211166" duration="3293000" />
+      <workItem from="1575993194444" duration="7535000" />
+      <workItem from="1576050434839" duration="513000" />
+      <workItem from="1576508060288" duration="3584000" />
     </task>
     <servers />
   </component>
+<<<<<<< HEAD
   <component name="TimeTrackingManager">
     <option name="totallyTimeSpent" value="40483000" />
   </component>
@@ -926,8 +957,23 @@
       <window_info anchor="right" id="Database" order="3" />
     </layout-to-restore>
   </component>
+=======
+>>>>>>> comments
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -938,11 +984,14 @@
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
+<<<<<<< HEAD
           <url>file://$PROJECT_DIR$/src/Controller/UserController.php</url>
           <line>96</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
+=======
+>>>>>>> comments
           <url>file://$PROJECT_DIR$/src/Controller/SecurityController.php</url>
           <line>32</line>
           <option name="timeStamp" value="11" />
@@ -999,6 +1048,7 @@
       </expression>
     </expressions>
   </component>
+<<<<<<< HEAD
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/public/css/app.css">
       <provider selected="true" editor-type-id="text-editor">
@@ -1363,4 +1413,6 @@
       </provider>
     </entry>
   </component>
+=======
+>>>>>>> comments
 </project>
