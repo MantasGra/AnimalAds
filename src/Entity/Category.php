@@ -43,10 +43,16 @@ class Category
      */
     private $subscriptions;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="category", orphanRemoval=true)
+     */
+    private $ads;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->subscriptions = new ArrayCollection();
+        $this->ad = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,6 +133,37 @@ class Category
             // set the owning side to null (unless already changed)
             if ($subscription->getCategory() === $this) {
                 $subscription->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ad[]
+     */
+    public function getAds(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addAd(Ad $ad): self
+    {
+        if (!$this->ads->contains($ad)) {
+            $this->ads[] = $ad;
+            $ad->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAd(Ad $ad): self
+    {
+        if ($this->ads->contains($ad)) {
+            $this->ads->removeElement($ad);
+            // set the owning side to null (unless already changed)
+            if ($ad->getCategory() === $this) {
+                $ad->setCategory(null);
             }
         }
 
