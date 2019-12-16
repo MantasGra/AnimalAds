@@ -80,6 +80,12 @@ class Ad
     private $createdBy;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="ads")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $category;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\Entity\Animal", inversedBy="ad", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
@@ -279,6 +285,17 @@ class Ad
     {
         $this->createdBy = $createdBy;
 
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+    
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 
