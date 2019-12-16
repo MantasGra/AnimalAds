@@ -94,3 +94,6 @@ body>.grid {
     height: 80px;
     width: 100%;
 }
+.container.min-width {
+    min-width: 70%;
+}

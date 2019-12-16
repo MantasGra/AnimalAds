@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Ad;
 use App\Entity\Message;
 use App\Form\MessageType;
+use App\Repository\MessageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,10 +17,14 @@ class MessageController extends AbstractController
     /**
      * @Route(path="/messages", name="browse_messages")
      */
-    public function index()
+    public function index(MessageRepository $messageRepository)
     {
-        return $this->render('message/index.html.twig');
+        $messages = $messageRepository->findBy(['sentTo' => $this->getUser()]);
+        return $this->render('message/index.html.twig', [
+            'messages' => $messages
+        ]);
     }
+
     /**
      * @Route(path="/ads/{id}/contact", name="contact")
      */
@@ -30,7 +35,7 @@ class MessageController extends AbstractController
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
         // Render contact template
-        return $this->render('ad/contact.html.twig',[
+        return $this->render('ad/contact.html.twig', [
             'id' => $id,    // Send ad {id} to contact template
             'form' => $form->createView(),  // Send created form to contact template
             'error' => $form->getErrors(true)
@@ -45,7 +50,7 @@ class MessageController extends AbstractController
     /**
      * @Route(path="/ads/{id}/contact/s", name="submitcontact")
      */
-    public function contactsubmit(Request $request, $id/*, \Swift_Mailer $mailer*/)
+    public function contactsubmit(Request $request, $id, \Swift_Mailer $mailer)
     {
         // Form for new message
         $message = new Message();
@@ -74,7 +79,7 @@ class MessageController extends AbstractController
                     ),
                     'text/html'
                 );
-            //$mailer->send($emailMessage);
+            $mailer->send($emailMessage);
             // Flash a success message
             $this->addFlash('success', 'Your message was sent');
             // Render view template
@@ -86,4 +91,17 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
+    /**
+     * @Route(path="/messages/{id}", name="message_read")
+     */
+    public function view($id, MessageRepository $messageRepository)
+    {
+        $message = $messageRepository->findOneBy(['id' => $id]);
+        if ($this->getUser() === $message->getSentFrom() || $this->getUser() === $message->getSentTo()) {
+            return $this->render('message/view.html.twig', [
+                'message' => $message
+            ]);
+        }
+        $this->redirectToRoute('browse_messages');
+    }
 }

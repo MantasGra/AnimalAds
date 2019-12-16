@@ -9,8 +9,8 @@
 		<a class="ui primary right floated button" href="{{ path('contact', {'id': id}) }}">Message seller</a>
 		<a class="ui primary right floated button">Save Ad</a>
 		<a class="ui primary right floated button">Subscribe Category</a>
-		<a class="ui green button right floated" href="{{ path('boost_ad') }}">Boost</a>
-		<a class="ui red right floated button" href="{{ path('report_ad') }}">Report Ad</a>
+		<a class="ui green button right floated" href="{{ path('boost_ad', { id: ad.id }) }}">Boost</a>
+		<a class="ui red right floated button" href="{{ path('report_ad', { id: ad.id }) }}">Report Ad</a>
 		<h3>Category</h3>
 		<p>A text container is used for the main container, which is useful for single column layouts</p>
 		<ul></ul>
@@ -95,10 +95,14 @@
 			<div class="ui stacked segment">
 				<div class="field">
 					<div style="height: 5em" class="ui input reply form">
-						{{ form_widget(form.text) }}
+						{% if not app.user %}
+							{{ form_widget(form.text, { 'attr': { 'placeholder': 'You must be logged in to comment', 'disabled': true }}) }}
+						{% else %}
+							{{ form_widget(form.text) }}
+						{% endif %}
 					</div>
 				</div>
-				<button class="ui primary submit labeled icon button" id="comment">
+				<button class="ui primary submit labeled icon button" id="comment" {% if not app.user %} disabled {% endif %}>
 					<i class="icon edit"></i>Comment</button>
 			</div>
 			<div class="ui error message"></div>
