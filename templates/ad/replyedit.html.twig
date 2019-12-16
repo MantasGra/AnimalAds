@@ -5,8 +5,11 @@
 
 {% block body %}
 	<div class="ui main text container">
+		{% if comment is defined %}
+			<p>Replying to: {{comment.text}}</p>
+		{% endif %}
 		<h3 class="ui dividing header">{{ title }}</h3>
-		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submit' ~ pathlink, {'id': id, 'commid': commid}), 'method': 'POST'}) }}
+		{{ form_start(form, { 'attr': {'class': 'ui large form'}}) }}
 		{% if error.current %}
 			<div class="ui negative message">
 				<i class="close icon"></i>
