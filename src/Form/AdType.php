@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Ad;
 use App\Entity\Animal;
+use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,6 +33,15 @@ class AdType extends AbstractType
             ->add('title', TextType::class, [
               
             ])
+
+            ->add('category', EntityType::class, [
+                'row_attr' => ['class' => 'ui dropdown'],
+                'class' => Category::class,   
+                'choice_label' => function ($category) {
+                    return $category->getName();
+                },  
+            ])
+
             ->add('price', NumberType::class, [
                 'attr' => [
                     'min'  => 0,
@@ -49,8 +59,11 @@ class AdType extends AbstractType
             ->add('hidden', CheckboxType::class, [
                 'label'  => 'Is Ad hidden?',
                 'required' => false,
-
             ])
+
+
+         
+
             ->add('animal', EntityType::class, [
                 'row_attr' => ['class' => 'ui dropdown'],
                 'class' => Animal::class,   

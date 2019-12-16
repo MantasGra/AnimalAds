@@ -36,6 +36,9 @@
 			{% else %}
 				<a class="ui right floated button" href="{{ path('forget_ad',{'id': ad.id}) }}">Forget Ad</a>
 			{% endif %}
+			{% if ad.createdBy == app.user %}
+				<a class="ui yellow floated button" href="{{ path('edit_ad',{'id': ad.id}) }}">Edit Ad</a>
+				{% endif %}
 			<a class="ui secondary right floated button">Subscribe Category</a>
 			<a class="ui green button right floated" href="{{ path('boost_ad') }}">Boost</a>
 			<a class="ui red right floated button" href="{{ path('report_ad') }}">Report Ad</a>

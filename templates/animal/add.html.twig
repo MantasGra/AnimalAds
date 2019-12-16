@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animals!
+{% endblock %}
+
+{% block body %}
+	{{ form_start(animalForm, { 'attr': {'class': 'ui large form'}}) }}
+	{{form_errors(animalForm)}}
+	<div class="ui main text container">
+		<h1 class="ui header">Add your own Animal!</h1>
+
+		<div class="field">
+			<label>Name</label>
+			{{ form_widget(animalForm.name) }}
+		</div>
+
+		<div class="field">
+			<label>Type</label>
+			{{ form_widget(animalForm.type) }}
+		</div>
+
+		<div class="field">
+			<label>Breed</label>
+			{{ form_widget(animalForm.breed) }}
+		</div>
+
+		<div class="field">
+			<label>Weight</label>
+			{{ form_widget(animalForm.weight) }}
+		</div>
+
+		<div class="field">
+			<label>Volume</label>
+			{{ form_widget(animalForm.volume) }}
+		</div>
+
+		<div class="field">
+			<label>Height</label>
+			{{ form_widget(animalForm.height) }}
+		</div>
+
+		<div class="field">
+			<label>Born at</label>
+			{{ form_widget(animalForm.bornAt) }}
+		</div>
+
+		<div class="field">
+			<label>Addictions</label>
+			{{ form_widget(animalForm.addictions) }}
+		</div>
+
+		<div class="field">
+			<div class="ui checkbox">
+				{{ form_widget(animalForm.trained) }}
+				{{ form_label(animalForm.trained) }}
+			</div>
+		</div>
+
+		<div class="field">
+			<div class="ui checkbox">
+				{{ form_widget(animalForm.vaccinated) }}
+				{{ form_label(animalForm.vaccinated) }}
+			</div>
+		</div>
+
+		<div class="field">
+			<div class="ui checkbox">
+				{{ form_widget(animalForm.safeToTransport) }}
+				{{ form_label(animalForm.safeToTransport) }}
+			</div>
+		</div>
+
+		<div class="field">
+			<div class="ui checkbox">
+				{{ form_widget(animalForm.friendly) }}
+				{{ form_label(animalForm.friendly) }}
+			</div>
+		</div>
+
+		<div class="field">
+			<label>Color</label>
+			{{ form_widget(animalForm.color) }}
+		</div>
+
+		<button class="ui button">Submit</button>
+
+
+	</div>
+	{{ form_end(animalForm) }}
+{% endblock %}

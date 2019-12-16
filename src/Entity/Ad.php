@@ -80,7 +80,7 @@ class Ad
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="ads")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="ads")
      * @ORM\JoinColumn(nullable=true)
      */
     private $category;

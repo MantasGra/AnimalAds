@@ -206,6 +206,28 @@ class AdController extends AbstractController
     }
 
     /**
+     * @Route(path="/ads/{id}/edit", name="edit_ad")
+     */
+    public function edit(Ad $ad, Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $form = $this->createForm(AdType::class, $ad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $ad = $form->getData();
+            $entityManager->persist($ad);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('browse_ads');
+        }
+        return $this->render('ad/add.html.twig', [
+            'adForm' => $form->createView()
+        ]);
+    }
+
+
+    /**
      * @Route(path="/ads/report", name="report_ad")
      */
     public function report()
