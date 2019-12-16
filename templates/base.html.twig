@@ -50,7 +50,9 @@
 
             <a href="{{ path('browse_ads') }}" class="item">Ads</a>
             <a href="{{ path('browse_animals') }}" class="item">Animals</a>
+            {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('browse_categories') }}" class="item">Categories</a>
+            {% endif %}
             <div class="ui simple dropdown item">
                 Explore <i class="dropdown icon"></i>
                 <div class="menu">
