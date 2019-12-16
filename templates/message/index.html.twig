@@ -9,7 +9,7 @@
         <h1 class="ui header">Your Messages</h1>
         <div class="ui list">
             {% for message in messages %}
-            <div class="item">
+            <div class="item" {% if not message.isRead %} style="background-color: rgba(0, 0, 255, 0.1);" {% endif %}>
                 <i class="comment icon"></i>
                 <div class="content">
                     <a class="header" href="{{ path('message_read', { id: message.id }) }}">{{ message.title }}</a>
