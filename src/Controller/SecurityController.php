@@ -52,8 +52,6 @@ class SecurityController extends AbstractController
                 $this->addFlash('success', 'Password link has been sent');
                 return $this->redirectToRoute('home');
             }
-
-
         }
         return $this->render('security/forgot-password.html.twig', [
             'form' => $form->createView()
