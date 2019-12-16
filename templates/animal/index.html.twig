@@ -3,13 +3,27 @@
 {% block title %}Animals!{% endblock %}
 
 {% block body %}
-    <div class="ui main text container">
-        <h1 class="ui header">Your Animals</h1>
-        <h3>Best profile ever.</h3>
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
+   <div class="ui container">
+<a class="ui primary right floated button" href="{{ path('add_animal') }}">Add an Animal</a>
+</div>
+	<div class="ui main text container">
+		<div class="ui relaxed divided list">
+			{% for animal in pagination %}
+				<div class="item">
+					<div class="content">
+						<a href="{{ path('edit_animal',{'id': animal.id}) }}" class="header">{{ animal.name }}, Type: {{animal.type}}</a>
+						<div class="description">Born
+							{{ animal.bornAt|date("m/d/Y") }}</div>
+					</div>
+						<a class="ui red left floated button" href="{{ path('remove_animal',{'id': animal.id}) }}">Delete</a>
+				</div>
+		
+			{% endfor %}
+		</div>
+
+		<div class="ui right floated pagination menu">
+			{{ knp_pagination_render(pagination) }}
+		</div>
+
+	</div>
 {% endblock %}
