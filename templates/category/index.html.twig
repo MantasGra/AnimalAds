@@ -8,7 +8,7 @@
             Are you sure you want to delete this category?
         </div>
         <div class="content">
-            <form class="ui form" id="thisform" action="{{ path('remove_category',{'id' : pagination.count}) }}" method="post">
+            <form class="ui form" id="thisform" action="{{ path('remove_category') }}" method="post">
 
                 <input type="hidden" name="categoryId" id="categoryId" value="">
             </form>
@@ -45,9 +45,8 @@
             <td data-label="Description">{{ category.description }}</td>
 
             <td data-label="Action">
-                <a class="ui button" href="{{ path('view_category',{'id' : category.id}) }}">View</a>
                 <a class="ui button" href="{{ path('edit_categories',{'id' : category.id}) }}">Edit</a>
-                <a class="open-modal negative ui button" data-id="{{ category.id }}" href="#remove-user-dialog">Remove</a>
+                <a class="open-modal negative ui button" data-id="{{ category.id }}">Remove</a>
             </td>
         </tr>
 {% endfor %}

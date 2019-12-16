@@ -5,7 +5,7 @@
 {% block body %}
     <div class="ui main text container">
 
-        <h1 class="ui header">Category edit</h1>
+        <h1 class="ui header">{{ pageTitle }}</h1>
         <div class="ui divider"></div>
         {{ form_start(form, { 'attr': {'class': 'ui large form'}}) }}
         {% if error.current %}
@@ -34,9 +34,6 @@
             <button class="ui fluid large teal submit button" id="login">Save</button>
         </div>
         <div class="ui error message"></div>
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
         {{ form_end(form) }}
 
 
