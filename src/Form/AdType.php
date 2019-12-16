@@ -13,9 +13,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Security\Core\Security;
 
 class AdType extends AbstractType
 {
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -44,6 +54,11 @@ class AdType extends AbstractType
             ->add('animal', EntityType::class, [
                 'row_attr' => ['class' => 'ui dropdown'],
                 'class' => Animal::class,   
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                    ->where('u.createdBy = :user')
+                    ->setParameter('user', $this->security->getUser());
+                },
                 'choice_label' => function ($animal) {
                     return $animal->getName();
                 }  
