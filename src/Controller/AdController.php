@@ -7,9 +7,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\CommentType;
-use App\Form\MessageType;
 use App\Entity\Comment;
-use App\Entity\Message;
 use App\Entity\Ad;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +29,8 @@ class AdController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         // Find all comments for {id} ad
+        //$ad = $entityManager->getRepository('App:Ad')->find($id);
+        //$comments = $ad.getComments();
         $comments = $entityManager->getRepository('App:Comment')->findBy(
             ['ad' => $id, 'parentComment' => null]
         );
@@ -47,26 +47,34 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route(path="/ads/{id}/{parent}/reply", name="replycomment")
+     * @Route(path="/ads/{id}/{commid}/reply", name="replycomment")
      */
-    public function reply(Request $request, $id, $parent)
+    public function reply(Request $request, $id, $commid)
     {
         // Form for new reply to a comment
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         // Render reply template
-        return $this->render('ad/reply.html.twig', [
+        return $this->render('ad/replyedit.html.twig', [
             'id' => $id,    // Send ad {id} to reply template
-            'parent' => $parent,    // Send parent comment id to reply template
+            'commid' => $commid,
+            'title' => 'Reply to a comment',
+            'pathlink' => 'reply',
+            'buttonText' => 'Reply',
+            'parent' => $commid,    // Send parent comment id to reply template
             'form' => $form->createView(),  // Send created form to reply template
             'error' => $form->getErrors(true)
         ]);
+        // Flash a warning message
+        $this->addFlash('warning', 'Something went wrong');
+        // Render view template
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**
-     * @Route(path="/ads/{id}/{parent}/reply/success", name="submitreply")
+     * @Route(path="/ads/{id}/{commid}/reply/s", name="submitreply")
      */
-    public function replysubmit(Request $request, $id, $parent)
+    public function replysubmit(Request $request, $id, $commid)
     {
         // Form for new reply to a comment
         $comment = new Comment();
@@ -77,7 +85,7 @@ class AdController extends AbstractController
             // Get {id} ad
             $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
             // Get {parent} comment
-            $parentComment = $this->getDoctrine()->getRepository(Comment::class)->find($parent);
+            $parentComment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
             // Set all variables for a new reply to a comment
             $comment -> setAd($ad);
             $comment -> setWrittenBy($this->getUser());
@@ -99,66 +107,6 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route(path="/ads/{id}/contact", name="contact")
-     */
-    public function contact(Request $request, $id)
-    {
-        // Form for new message
-        $message = new Message();
-        $form = $this->createForm(MessageType::class, $message);
-        // Render contact template
-        return $this->render('ad/contact.html.twig',[
-            'id' => $id,    // Send ad {id} to reply template
-            'form' => $form->createView(),  // Send created form to reply template
-            'error' => $form->getErrors(true)
-        ]);
-    }
-
-    /**
-     * @Route(path="/ads/{id}/contact/success", name="submitcontact")
-     */
-    public function contactsubmit(Request $request, $id/*, \Swift_Mailer $mailer*/)
-    {
-        // Form for new message
-        $message = new Message();
-        $form = $this->createForm(MessageType::class, $message);
-        $form->handleRequest($request);
-        // Check if form was correctly filled
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Get {id} ad
-            $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-            // Set all variables for a new message
-            $message -> setSentTo($ad->getCreatedBy());
-            $message -> setSentFrom($this->getUser());
-            $message -> setWrittenAt(new \DateTime());
-            // Post the message to DB
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($message);
-            $entityManager->flush();
-            // Send an email to the message receiver about the message
-            $emailMessage = (new \Swift_Message('Message to seller'))
-                ->setFrom('bemantelio@gmail.com')
-                ->setTo($ad->getCreatedBy()->getEmail())
-                ->setBody(
-                    $this->renderView(
-                        'message/email-message.html.twig',
-                        ['userEmail' => $ad->getCreatedBy()->getEmail()]
-                    ),
-                    'text/html'
-                );
-            //$mailer->send($emailMessage);
-            // Flash a success message
-            $this->addFlash('success', 'Your message was sent');
-            // Render view template
-            return $this->redirectToRoute('view_ad', array('id' => $id));
-        }
-        // Flash a warning message
-        $this->addFlash('warning', 'Something went wrong');
-        // Render view template
-        return $this->redirectToRoute('view_ad', array('id' => $id));
-    }
-
-    /**
      * @Route(path="/ads/{id}/{commid}/edit", name="editcomment")
      */
     public function editcomment(Request $request, $id, $commid)
@@ -168,8 +116,12 @@ class AdController extends AbstractController
         // Form for existing comment to edit
         $form = $this->createForm(CommentType::class, $comment);
         // Render contact template
-        return $this->render('ad/edit-comment.html.twig', [
+        return $this->render('ad/replyedit.html.twig', [
             'id' => $id,    // Send ad {id} to edit-comment template
+            'commid' => $commid,
+            'title' => 'Edit your comment',
+            'pathlink' => 'edit',
+            'buttonText' => 'Edit',
             'commid' => $commid,    // Send comment {commid} to edit-comment template
             'form' => $form->createView(),  // Send created form to reply template
             'error' => $form->getErrors(true)
@@ -177,7 +129,7 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route(path="/ads/{id}/{commid}/edit/success", name="submitedit")
+     * @Route(path="/ads/{id}/{commid}/edit/s", name="submitedit")
      */
     public function editcommentsubmit(Request $request, $id, $commid)
     {
@@ -207,7 +159,7 @@ class AdController extends AbstractController
         // Flash a warning message
         $this->addFlash('warning', 'You are not the author of the comment.');
         // Render view template
-        return $this->redirectToRoute('view_ad');
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
 

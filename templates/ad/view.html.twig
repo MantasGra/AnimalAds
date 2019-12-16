@@ -71,7 +71,7 @@
 							</div>
 						{% endfor %}
 						<div style="margin-left: 2.7em; margin-bottom: 0em;" class="actions">
-							<a class="reply" href="{{ path('replycomment', {'id': '1','parent': comment.id}) }}">Reply</a>
+							<a class="reply" href="{{ path('replycomment', {'id': '1','commid': comment.id}) }}">Reply</a>
 						</div>
 						<script>
 							$('.ui.accordion').accordion({active: false, collapsible: true});

@@ -5,8 +5,8 @@
 
 {% block body %}
 	<div class="ui main text container">
-		<h3 class="ui dividing header">Edit your comment</h3>
-		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submitedit', {'id': id, 'commid': commid}), 'method': 'POST'}) }}
+		<h3 class="ui dividing header">{{ title }}</h3>
+		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submit' ~ pathlink, {'id': id, 'commid': commid}), 'method': 'POST'}) }}
 		{% if error.current %}
 			<div class="ui negative message">
 				<i class="close icon"></i>
@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<button class="ui primary submit labeled icon button" id="comment">
-				<i class="icon edit"></i>Reply</button>
+				<i class="icon edit"></i>{{ buttonText }}</button>
 		</div>
 		<div class="ui error message"></div>
 		{{ form_end(form) }}

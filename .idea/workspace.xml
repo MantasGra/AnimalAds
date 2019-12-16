@@ -4,7 +4,9 @@
     <list default="true" id="d73747b6-d05c-4436-aef4-d80d8748c027" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/AdController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AdController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SecurityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/MessageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MessageController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ad/edit-comment.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ad/replyedit.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ad/reply.html.twig" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/ad/view.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ad/view.html.twig" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -215,7 +217,8 @@
       <workItem from="1575710958219" duration="30871000" />
       <workItem from="1575915211166" duration="3293000" />
       <workItem from="1575993194444" duration="7535000" />
-      <workItem from="1576050434839" duration="269000" />
+      <workItem from="1576050434839" duration="513000" />
+      <workItem from="1576508060288" duration="3584000" />
     </task>
     <servers />
   </component>
