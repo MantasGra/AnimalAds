@@ -54,27 +54,43 @@ class AdController extends AbstractController
         // Form for new reply to a comment
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        $parentComment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Get {id} ad
+            $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+            // Get {parent} comment
+            // Set all variables for a new reply to a comment
+            $comment -> setAd($ad);
+            $comment -> setWrittenBy($this->getUser());
+            $comment -> setCreatedAt(new \DateTime());
+            $comment -> setParentComment($parentComment);
+            // Post the comment to DB
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            // Flash a success message
+            $this->addFlash('success', 'Your reply was added');
+            // Render view template
+            // use of array() is deprecated, it's better to use []
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        }
         // Render reply template
         return $this->render('ad/replyedit.html.twig', [
             'id' => $id,    // Send ad {id} to reply template
-            'commid' => $commid,
+            'comment' => $parentComment,
             'title' => 'Reply to a comment',
-            'pathlink' => 'reply',
             'buttonText' => 'Reply',
             'parent' => $commid,    // Send parent comment id to reply template
             'form' => $form->createView(),  // Send created form to reply template
             'error' => $form->getErrors(true)
         ]);
-        // Flash a warning message
-        $this->addFlash('warning', 'Something went wrong');
-        // Render view template
-        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**
      * @Route(path="/ads/{id}/{commid}/reply/s", name="submitreply")
      */
-    public function replysubmit(Request $request, $id, $commid)
+    /*public function replysubmit(Request $request, $id, $commid)
     {
         // Form for new reply to a comment
         $comment = new Comment();
@@ -104,7 +120,7 @@ class AdController extends AbstractController
         $this->addFlash('warning', 'Something went wrong');
         // Render view template
         return $this->redirectToRoute('view_ad', array('id' => $id));
-    }
+    }*/
 
     /**
      * @Route(path="/ads/{id}/{commid}/edit", name="editcomment")
