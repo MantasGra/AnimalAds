@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animals!{% endblock %}
+
+{% block body %}
+    <div class="ui main text container">
+        <h1 class="ui header">Order summary</h1>
+        <div class="ui list">
+            <div class="item"><strong>Boosted ad:</stong> {{ ad.title }}</div>
+            <div class="item"><strong>Boost type:</strong> {{ boost.type }}</div>
+            <div class="item"><strong>Start date:</strong> {{ boost.dateFrom | date() }}</div>
+            <div class="item"><strong>Duration:</strong> {{ boost.duration }}</div>
+            <div class="item"><strong>Total price:</strong> {{ totalPrice | number_format(2) }}€</div>
+        </div>
+        <form class="ui form" action="{{ path('pay_ad', {'id': ad.id}) }}">
+            <div class="field">
+                <input type="text" name="payment" placeholder="Add some payment data">
+            </div>
+            <input type="hidden" name="type" value={{ boost.type }}>
+            <input type="hidden" name="dateFrom" value={{ boost.dateFrom | date('Y-m-d')}}>
+            <input type="hidden" name="duration" value={{ boost.duration }}>
+            <button type="submit" class="ui primary right floated button">Submit order</button>
+        </form>
+    </div>
+
+{% endblock %}

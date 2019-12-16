@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BoostRepository")
@@ -27,6 +28,7 @@ class Boost
     private $duration;
 
     /**
+     * @Assert\Choice({"Premium", "Basic"})
      * @ORM\Column(type="string", length=255)
      */
     private $type;
@@ -38,7 +40,7 @@ class Boost
 
     public function __construct()
     {
-        $this->dateFrom = new \DateTime();
+        $this->dateFrom = new \DateTime('tomorrow');
     }
 
     public function getId(): ?int

@@ -67,10 +67,9 @@ class AnimalController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
         $ad = $this->getDoctrine()->getRepository(Animal::class)->find($id);
-        if ($this->getUser() == $ad->createdBy())
-        {
+        if ($this->getUser() == $ad->createdBy()) {
             $entityManager->remove($ad);
-        $entityManager->flush();
+            $entityManager->flush();
         }
         return $this->redirectToRoute('browse_animals');
     }

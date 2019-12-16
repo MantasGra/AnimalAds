@@ -50,7 +50,9 @@
 
             <a href="{{ path('browse_ads') }}" class="item">Ads</a>
             <a href="{{ path('browse_animals') }}" class="item">Animals</a>
+            {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('browse_categories') }}" class="item">Categories</a>
+            {% endif %}
             <div class="ui simple dropdown item">
                 Explore <i class="dropdown icon"></i>
                 <div class="menu">
@@ -102,6 +104,17 @@
         </div>
     </div>
 {% endfor %}
+{% for message in app.flashes('warning') %}
+    <div class="ui top-margin container">
+        <div class="ui warning message">
+            <div class="header">
+                <i class="check icon"></i>
+                Warning
+            </div>
+            <p>{{ message }}</p>
+        </div>
+    </div>
+{% endfor %}
 {% if app.user and not app.user.enabled %}
     <div class="ui top-margin container">
         <div class="ui info message">
@@ -117,40 +130,6 @@
 
 <div class="ui inverted vertical footer segment">
     <div class="ui center aligned container">
-        <div class="ui stackable inverted divided grid">
-            <div class="three wide column">
-                <h4 class="ui inverted header">Group 1</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item">Link One</a>
-                    <a href="#" class="item">Link Two</a>
-                    <a href="#" class="item">Link Three</a>
-                    <a href="#" class="item">Link Four</a>
-                </div>
-            </div>
-            <div class="three wide column">
-                <h4 class="ui inverted header">Group 2</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item">Link One</a>
-                    <a href="#" class="item">Link Two</a>
-                    <a href="#" class="item">Link Three</a>
-                    <a href="#" class="item">Link Four</a>
-                </div>
-            </div>
-            <div class="three wide column">
-                <h4 class="ui inverted header">Group 3</h4>
-                <div class="ui inverted link list">
-                    <a href="#" class="item">Link One</a>
-                    <a href="#" class="item">Link Two</a>
-                    <a href="#" class="item">Link Three</a>
-                    <a href="#" class="item">Link Four</a>
-                </div>
-            </div>
-            <div class="seven wide column">
-                <h4 class="ui inverted header">Footer Header</h4>
-                <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
-            </div>
-        </div>
-        <div class="ui inverted section divider"></div>
         <img src="{{ asset('images/logo.png') }}" class="ui centered mini image">
         <div class="ui horizontal inverted small divided link list">
             <a class="item" href="#">Site Map</a>

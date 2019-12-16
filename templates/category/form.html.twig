@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category edit{% endblock %}
+
+{% block body %}
+    <div class="ui main text container">
+
+        <h1 class="ui header">{{ pageTitle }}</h1>
+        <div class="ui divider"></div>
+        {{ form_start(form, { 'attr': {'class': 'ui large form'}}) }}
+        {% if error.current %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header" style="text-align: left">
+                    There was a problem
+                </div>
+                {% for err in error %}
+                    <p style="text-align: left">{{ err.messageTemplate }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="ui stacked segment">
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.name) }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    {{ form_widget(form.description) }}
+                </div>
+            </div>
+            <button class="ui fluid large teal submit button" id="login">Save</button>
+        </div>
+        <div class="ui error message"></div>
+        {{ form_end(form) }}
+
+
+    </div>
+{% endblock %}

@@ -7,10 +7,11 @@
 
     <div class="ui main text container">
 
-        <h1 class="ui header">{{ user.firstName ~ ' ' ~ user.lastName }}</h1>
+        <h1 class="ui header">Hello, {{ user.email }}</h1>
         <div class="metadata">You've been with us since {{ user.registeredAt|date }}</div>
         <div class="ui divider"></div>
         <h3>Your information</h3>
+        <p>Name: {{ user.firstName ~ ' ' ~ user.lastName }}</p>
         <p>Phone number: {{ user.phone }}</p>
         <p>Address: {{ user.address }}</p>
         <p>City: {{ user.city }}</p>
