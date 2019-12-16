@@ -64,11 +64,14 @@ class AnimalController extends AbstractController
      */
     public function remove($id)
     {
+
         $entityManager = $this->getDoctrine()->getManager();
         $ad = $this->getDoctrine()->getRepository(Animal::class)->find($id);
-
-        $entityManager->remove($ad);
+        if ($this->getUser() == $ad->createdBy())
+        {
+            $entityManager->remove($ad);
         $entityManager->flush();
+        }
         return $this->redirectToRoute('browse_animals');
     }
 
@@ -81,16 +84,15 @@ class AnimalController extends AbstractController
         $form = $this->createForm(AnimalType::class, $animal);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
- 
+
             $animal = $form->getData();
             $entityManager->persist($animal);
             $entityManager->flush();
-         
+
             return $this->redirectToRoute('browse_animals');
         }
         return $this->render('animal/add.html.twig', [
             'animalForm' => $form->createView()
         ]);
     }
-    
 }

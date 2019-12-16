@@ -179,9 +179,10 @@ class AdController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-
+        if ($this->getUser() == $ad->createdBy()) {
         $entityManager->remove($ad);
         $entityManager->flush();
+        }
         return $this->redirectToRoute('browse_ads');
     }
 
