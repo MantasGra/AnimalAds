@@ -94,13 +94,13 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route(path="/ads/{id}/{commid}/edit", name="editcomment")
+     * @Route(path="/ads/{id}/comments/{commid}/edit", name="editcomment")
      */
     public function editComment(Request $request, $id, $commid)
     {
         // Get {commid} comment
         $comment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
-        if ($comment->getWrittenBy() === $this->getUser()) {
+        if ($comment->getWrittenBy() !== $this->getUser()) {
             return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Form for existing comment to edit
@@ -130,7 +130,7 @@ class AdController extends AbstractController
 
 
     /**
-     * @Route(path="/ads/{id}/comment/", name="comment")
+     * @Route(path="/ads/{id}/comment", name="comment")
      */
     public function comment(Request $request, $id)
     {

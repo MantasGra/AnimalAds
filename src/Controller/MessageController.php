@@ -19,7 +19,7 @@ class MessageController extends AbstractController
      */
     public function index(MessageRepository $messageRepository)
     {
-        $messages = $messageRepository->findBy(['sentTo' => $this->getUser()]);
+        $messages = $messageRepository->getMessages($this->getUser()->getId());
         return $this->render('message/index.html.twig', [
             'messages' => $messages
         ]);
@@ -97,6 +97,10 @@ class MessageController extends AbstractController
     public function view($id, MessageRepository $messageRepository)
     {
         $message = $messageRepository->findOneBy(['id' => $id]);
+        if (!$message->getIsRead()) {
+            $message->setIsRead(true);
+            $this->getDoctrine()->getManager()->flush();
+        }
         if ($this->getUser() === $message->getSentFrom() || $this->getUser() === $message->getSentTo()) {
             return $this->render('message/view.html.twig', [
                 'message' => $message
