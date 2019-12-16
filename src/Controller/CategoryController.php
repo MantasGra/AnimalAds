@@ -49,17 +49,8 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
-            $searchCategory = $this->getDoctrine()->getRepository(Category::class)->findOneBy([
-                'name' => $form->get('name')->getData()
-            ]);
-            if(isset($searchCategory))
-            {
-                $this->addFlash('danger', 'Category with this name already exists!');
-            }
-            else
-            {
-                $category->setName($form->get('name')->getData());
-                $category->setDescription($form->get('description')->getData());
+
+
                 $createdBy = $this->getUser();
                 $category->setCreatedBy($createdBy);
                 $entityManager = $this->getDoctrine()->getManager();
@@ -67,10 +58,11 @@ class CategoryController extends AbstractController
 
                 $entityManager->flush();
                 return $this->redirectToRoute('browse_categories');
-            }
+
         }
         return $this->render('category/add.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'error' => $form->getErrors(true)
         ]);
     }
     /**
@@ -88,21 +80,10 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
-
-            $searchCategory = $this->getDoctrine()->getRepository(Category::class)->findOneBy([
-                'name' => $form->get('name')->getData()
-            ]);
-            if($category !== $searchCategory && $searchCategory)
-            {
-                $this->addFlash('danger', 'Category already exists!');
-            }
-            else
-            {
-                $category->setName($form->get('name')->getData());
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->flush();
                 return $this->redirectToRoute('browse_categories');
-            }
+
         }
         return $this->render('category/edit.html.twig', [
             'pageTitle' => 'Category edit',
@@ -131,13 +112,10 @@ class CategoryController extends AbstractController
         $category = $this->getDoctrine()->getRepository(Category::class)->findOneBy([
             'id' => $id
         ]);
-        $form = $this->createForm(CategoryType::class, $category, [
-            'action' => $this->generateUrl('view_category', [ 'id' => $id ])
-        ]);
-        $form->handleRequest($request);
 
         return $this->render('category/view.html.twig', [
             'category' => $category
         ]);
     }
+
 }

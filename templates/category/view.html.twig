@@ -11,7 +11,7 @@
         <h3>Category information</h3>
         <p>Category description: {{ category.description }}</p>
         <p>Ads: {{ category.subscriptions.count }}</p>
-        <p>Category created by: {{ category.createdBy.firstName ~ ' ' ~ category.createdBy.lastName }}</p>
+        <p>Category created by: {{ category.createdBy.email }}</p>
         <p>Category created at: {{ category.createdAt|date('Y-m-d') }}</p>
         <a class="ui button" onclick="history.back(-1)">Go back to list</a>
     </div>

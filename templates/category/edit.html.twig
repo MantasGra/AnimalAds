@@ -4,15 +4,7 @@
 
 {% block body %}
     <div class="ui main text container">
-        {% for message in app.flashes('danger') %}
 
-            <div class="alert alert-danger" style="background-color: #ee2d4d">
-
-                {{ message }}
-
-            </div>
-
-        {% endfor %}
         <h1 class="ui header">Category edit</h1>
         <div class="ui divider"></div>
         {{ form_start(form, { 'attr': {'class': 'ui large form'}}) }}
