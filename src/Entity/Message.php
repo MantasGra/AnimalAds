@@ -48,9 +48,15 @@ class Message
      */
     private $file;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isRead;
+
     public function __construct()
     {
         $this->writtenAt = new \DateTime();
+        $this->isRead = false;
     }
 
     public function getId(): ?int
@@ -126,6 +132,18 @@ class Message
     public function setFile(?File $file): self
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getIsRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(bool $isRead): self
+    {
+        $this->isRead = $isRead;
 
         return $this;
     }

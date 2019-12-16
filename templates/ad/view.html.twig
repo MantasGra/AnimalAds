@@ -1,22 +1,112 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Animals!{% endblock %}
+{% block title %}Animals!
+{% endblock %}
 
 {% block body %}
-    <div class="ui main text container">
-        <h1 class="ui header">{{ ad.title }}</h1>
-        <a class="ui primary right floated button">Save Ad</a>
-        <a class="ui primary right floated button">Subscribe Category</a>
-        <a class="ui green button right floated" href="{{ path('boost_ad', {'id': 1}) }}">Boost</a>
-        <a class="ui red right floated button" href="{{ path('report_ad', {'id': 1}) }}">Report Ad</a>
-        <h3>Category</h3>
-        <p>A text container is used for the main container, which is useful for single column layouts</p>
-        <ul>
+	<div class="ui main text container">
+		<h1 class="ui header">Ad 1 title</h1>
+		<a class="ui primary right floated button" href="{{ path('contact', {'id': id}) }}">Message seller</a>
+		<a class="ui primary right floated button">Save Ad</a>
+		<a class="ui primary right floated button">Subscribe Category</a>
+		<a class="ui green button right floated" href="{{ path('boost_ad', { id: ad.id }) }}">Boost</a>
+		<a class="ui red right floated button" href="{{ path('report_ad', { id: ad.id }) }}">Report Ad</a>
+		<h3>Category</h3>
+		<p>A text container is used for the main container, which is useful for single column layouts</p>
+		<ul></ul>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-        </ul>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
+		<div class="ui comments">
+			<h3 class="ui dividing header">Comments</h3>
+			{% for comment in cmts %}
+				{% if comment.parentComment is null %}
+					<div class="comment">
+						<div style="padding-bottom: 0.5em" class="content">
+							<a class="author">{{comment.writtenBy.firstName}}
+								{{comment.writtenBy.lastName}}
+								({{comment.writtenBy.email}})</a>
+							<div class="metadata">
+								<span class="date">{{comment.createdAt|date}}</span>
+							</div>
+							<div class="text">
+								{{comment.text}}
+							</div>
+							{% if comment.getReplies()|length == 0 %}
+								{% if app.user %}
+									{% if comment.writtenBy.id == app.user.id %}
+										<div style="padding-bottom: 1em;" class="actions">
+											<a class="reply" href="{{ path('editcomment', {'id': id,'commid': comment.id}) }}">Edit</a>
+											<a class="reply" href="{{ path('deletecomment', {'id': id,'commid': comment.id}) }}">Delete</a>
+										</div>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						</div>
+						{% for reply in comment.getReplies() %}
+							<div style="padding-bottom: 0.3em; margin-left: 1.3em; padding-top: 0.3em;" class="comments">
+								<div class="comment">
+									<div class="content">
+										<a class="author">{{reply.writtenBy.firstName}}
+											{{reply.writtenBy.lastName}}
+											({{reply.writtenBy.email}})</a>
+										<div class="metadata">
+											<span class="date">{{reply.createdAt|date}}</span>
+										</div>
+										<div class="text">
+											{{reply.text}}
+										</div>
+										{% if app.user %}
+											{% if reply.writtenBy.id == app.user.id %}
+												<div class="actions">
+													<a class="reply" href="{{ path('editcomment', {'id': id,'commid': reply.id}) }}">Edit</a>
+													<a class="reply" href="{{ path('deletecomment', {'id': id,'commid': reply.id}) }}">Delete</a>
+												</div>
+											{% endif %}
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+						<div style="margin-left: 2.7em; margin-bottom: 0em;" class="actions">
+							<a class="reply" href="{{ path('replycomment', {'id': '1','commid': comment.id}) }}">Reply</a>
+						</div>
+						<script>
+							$('.ui.accordion').accordion({active: false, collapsible: true});
+						</script>
+					</div>
+				{% endif %}
+			{% endfor %}
+			<h3 class="ui dividing header">Add a new comment</h3>
+			{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('comment', {'id': id}), 'method': 'POST'}) }}
+			{% if error.current %}
+				<div class="ui negative message">
+					<i class="close icon"></i>
+					<div class="header" style="text-align: left">
+						There was a problem
+					</div>
+					{% for err in error %}
+						<p style="text-align: left">{{ err.messageTemplate }}</p>
+					{% endfor %}
+				</div>
+			{% endif %}
+			<div class="ui stacked segment">
+				<div class="field">
+					<div style="height: 5em" class="ui input reply form">
+						{% if not app.user %}
+							{{ form_widget(form.text, { 'attr': { 'placeholder': 'You must be logged in to comment', 'disabled': true }}) }}
+						{% else %}
+							{{ form_widget(form.text) }}
+						{% endif %}
+					</div>
+				</div>
+				<button class="ui primary submit labeled icon button" id="comment" {% if not app.user %} disabled {% endif %}>
+					<i class="icon edit"></i>Comment</button>
+			</div>
+			<div class="ui error message"></div>
+			{{ form_end(form) }}
+		</div>
+	</div>
 {% endblock %}

@@ -10,11 +10,14 @@ use App\Form\ReportType;
 use App\Entity\Ad;
 use App\Entity\Boost;
 use App\Form\BoostType;
+use App\Form\CommentType;
+use App\Entity\Comment;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdController extends AbstractController
 {
-   
+
     /**
      * @Route(path="/ads", name="browse_ads")
      */
@@ -28,10 +31,165 @@ class AdController extends AbstractController
      */
     public function view($id)
     {
-        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        // Find all comments for {id} ad
+        $ad = $entityManager->getRepository('App:Ad')->find($id);
+        //$comments = $ad.getComments();
+        $comments = $entityManager->getRepository('App:Comment')->findBy(
+            ['ad' => $id, 'parentComment' => null]
+        );
+        // Form for new comment
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        // Render view template
         return $this->render('ad/view.html.twig', [
             'ad' => $ad,
+            'id' => $id,
+            'cmts' => $comments,    // Send gathered comments to view template
+            'form' => $form->createView(),  // Send created form to view template
+            'error' => $form->getErrors(true)
         ]);
+    }
+
+    /**
+     * @Route(path="/ads/{id}/comments/{commid}/reply", name="replycomment")
+     */
+    public function reply(Request $request, $id, $commid)
+    {
+        // Form for new reply to a comment
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        $parentComment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Get {id} ad
+            $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+            // Get {parent} comment
+            // Set all variables for a new reply to a comment
+            $comment->setAd($ad);
+            $comment->setWrittenBy($this->getUser());
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setParentComment($parentComment);
+            // Post the comment to DB
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            // Flash a success message
+            $this->addFlash('success', 'Your reply was added');
+            // Render view template
+            // use of array() is deprecated, it's better to use []
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        }
+        // Render reply template
+        return $this->render('ad/replyedit.html.twig', [
+            'id' => $id,    // Send ad {id} to reply template
+            'comment' => $parentComment,
+            'title' => 'Reply to a comment',
+            'buttonText' => 'Reply',
+            'parent' => $commid,    // Send parent comment id to reply template
+            'form' => $form->createView(),  // Send created form to reply template
+            'error' => $form->getErrors(true)
+        ]);
+    }
+
+    /**
+     * @Route(path="/ads/{id}/comments/{commid}/edit", name="editcomment")
+     */
+    public function editComment(Request $request, $id, $commid)
+    {
+        // Get {commid} comment
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
+        if ($comment->getWrittenBy() !== $this->getUser()) {
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        }
+        // Form for existing comment to edit
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Update existing comment
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            // Flash a success message
+            $this->addFlash('success', 'Your comment was changed');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        }
+        // Render contact template
+        return $this->render('ad/replyedit.html.twig', [
+            'id' => $id,    // Send ad {id} to edit-comment template
+            'title' => 'Edit your comment',
+            'pathlink' => 'edit',
+            'buttonText' => 'Edit',
+            'commid' => $commid,    // Send comment {commid} to edit-comment template
+            'form' => $form->createView(),  // Send created form to reply template
+            'error' => $form->getErrors(true)
+        ]);
+    }
+
+
+    /**
+     * @Route(path="/ads/{id}/comment", name="comment")
+     */
+    public function comment(Request $request, $id)
+    {
+        // Form for a new comment
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        // Check if form was correctly filled
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Get {id} ad
+            $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+            // Set all variables for a new comment
+            $comment->setAd($ad);
+            $comment->setWrittenBy($this->getUser());
+            $comment->setCreatedAt(new \DateTime());
+            // Post the comment to DB
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            // Flash a success message
+            $this->addFlash('success', 'Your comment was added');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        }
+        // Flash a warning message
+        $this->addFlash('warning', 'Something went wrong');
+        // Render view template
+        return $this->redirectToRoute('view_ad', array('id' => $id));
+    }
+
+    /**
+     * @Route(path="/ads/{id}/{commid}/deletecomment/", name="deletecomment")
+     */
+    public function deleteComment(Request $request, $id, $commid)
+    {
+        // Get commid comment
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
+        // Check if the comment was written by current {user}
+        if ($comment->getWrittenBy()->getId() == $this->getUser()->getId()) {
+            // Check if the comment has any children comments
+            if (count($comment->getReplies()) == 0) {
+                // Delete the comment from DB
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($comment);
+                $entityManager->flush();
+                // Flash a success message
+                $this->addFlash('success', 'Your comment was deleted');
+                // Render view template
+                return $this->redirectToRoute('view_ad', array('id' => $id));
+            }
+            // Flash a warning message
+            $this->addFlash('warning', 'This comment has replies.');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        }
+        // Flash a warning message
+        $this->addFlash('warning', 'You are not the author of the comment.');
+        // Render view template
+        return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
     /**
@@ -49,22 +207,21 @@ class AdController extends AbstractController
     {
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
         $form = $this->createForm(ReportType::class);
-        
+
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $emailMessage = (new \Swift_Message('An ad has been reported!'))
-            ->setFrom('bemantelio@gmail.com')
-            ->setTo('bemantelio@gmail.com')
-            ->setBody(
-                $this->renderView(
-                    'ad/report-message.html.twig',
-                    ['ad' => $ad, 'user' => $user, 'message' => $form->getData()['reportMessage']]
-                ),
-                'text/html'
-            );
-        $mailer->send($emailMessage);
+                ->setFrom('bemantelio@gmail.com')
+                ->setTo('bemantelio@gmail.com')
+                ->setBody(
+                    $this->renderView(
+                        'ad/report-message.html.twig',
+                        ['ad' => $ad, 'user' => $user, 'message' => $form->getData()['reportMessage']]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($emailMessage);
             $this->addFlash('success', 'Thank you!');
             return $this->redirectToRoute('view_ad', ['id' => $id]);
         }
@@ -74,7 +231,7 @@ class AdController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route(path="/ads/{id}/boost", name="boost_ad")
      */
     public function boost($id, Request $request)
@@ -83,19 +240,14 @@ class AdController extends AbstractController
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
         $form = $this->createForm(BoostType::class, $boost);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $totalPrice = 0;
-            if ($boost->getType() == "Premium")
-            {
+            if ($boost->getType() == "Premium") {
                 $totalPrice = 1;
-            }
-            else if ($boost->getType() == "Basic")
-            {
+            } else if ($boost->getType() == "Basic") {
                 $totalPrice = 0.75;
             }
-            switch($boost->getDuration())
-            {
+            switch ($boost->getDuration()) {
                 case 3:
                     $totalPrice *= 2.5;
                     break;
