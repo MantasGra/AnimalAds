@@ -21,7 +21,9 @@
     </div>
 {% if categories is defined %}
 	<div class="ui container">
+
 		<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
+		<a class="ui secondary right floated button" href="{{ path('search_ads') }}">Search Ads</a>
 		<form action="{{ path('filter_by_category') }}" method="post">
 			<select name="category" class="ui dropdown right floated segment" id="category" onchange="this.form.submit()">
 				<option value="">Select category</option>
