@@ -6,6 +6,18 @@
 {% block body %}
 	<div class="ui container">
 		<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
+		<form action="{{ path('filter_by_category') }}" method="post">
+			<select name="category" class="ui dropdown right floated segment" id="category" onchange="this.form.submit()">
+				<option value="">Select category</option>
+				{% for category in categories %}
+					{% if selectedCategory is defined and selectedCategory == category %}
+						<option value={{ category.id }} selected>{{ category.name}}</option>
+					{% else %}
+						<option value={{ category.id }}>{{ category.name}}</option>
+					{% endif %}
+				{% endfor %}
+			</select>
+		</form>
 	</div>
 	<div class="ui main text container">
 		<div class="ui relaxed divided list">
@@ -51,6 +63,8 @@
 		</div>
 
 	</div>
-
+	<script>
+		$('#category').dropdown();
+	</script>
 
 {% endblock %}

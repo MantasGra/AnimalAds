@@ -17,6 +17,7 @@ use App\Entity\Boost;
 use App\Form\BoostType;
 use App\Form\CommentType;
 use App\Entity\Comment;
+use App\Entity\Category;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -30,7 +31,7 @@ class AdController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
         $query = $queryBuilder->select('u')
             ->from('App:Ad', 'u')
             ->getQuery();
@@ -42,7 +43,8 @@ class AdController extends AbstractController
         );
 
         return $this->render('ad/index.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'categories' => $categories
         ]);
     }
 
@@ -70,6 +72,32 @@ class AdController extends AbstractController
 
         return $this->render('ad/index.html.twig', [
             'pagination' => $pagination
+        ]);
+    }
+
+        /**
+     * @Route(path="/ads/new", name="add_ad")
+     */
+    public function add(Request $request)
+    {
+        $ad = new Ad();
+
+        $form = $this->createForm(AdType::class, $ad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ad->setReportCount(0);
+            $ad->setViewCount(0);
+            $ad->setCreatedAt(new \DateTime());
+            $ad->setCreatedBy($this->getUser());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($ad);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('browse_ads');
+        }
+        return $this->render('ad/add.html.twig', [
+            'adForm' => $form->createView()
         ]);
     }
 
@@ -215,32 +243,6 @@ class AdController extends AbstractController
         return $this->redirectToRoute('view_ad', array('id' => $id));
     }
 
-
-    /**
-     * @Route(path="/ads/new", name="add_ad")
-     */
-    public function add(Request $request)
-    {
-        $ad = new Ad();
-
-        $form = $this->createForm(AdType::class, $ad);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $ad->setReportCount(0);
-            $ad->setViewCount(0);
-            $ad->setCreatedAt(new \DateTime());
-            $ad->setCreatedBy($this->getUser());
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($ad);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('browse_ads');
-        }
-        return $this->render('ad/add.html.twig', [
-            'adForm' => $form->createView()
-        ]);
-    }
 
 
 
@@ -463,6 +465,46 @@ class AdController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'Your add has been boosted. Thank you for choosing animal ads!');
         return $this->redirectToRoute('view_ad', ['id' => $id]);
+    }
+
+    /**
+     * @Route(path="/ads/categoryfilter", name="filter_by_category")
+     */
+    public function filterByCategory(Request $request, PaginatorInterface $paginator)
+    {
+        if($request->request->has('category'))
+        {
+            $id = $request->get('category');
+            if($id == "")
+            {
+                return $this->redirectToRoute('browse_ads');
+            }
+            $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
+
+            $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+            $query = $qb->select('ad')
+            ->from('App:Ad', 'ad')
+            ->where('ad.category = :category')
+            ->setParameter('category', $category)
+            ->getQuery();
+
+            
+            $pagination = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                6
+            );
+
+            $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
+            return $this->render('ad/index.html.twig', [
+                'pagination' => $pagination,
+                'categories' => $categories,
+                'selectedCategory' => $category
+            ]);
+        }
+        return $this->redirectToRoute('browse_ads');
     }
 
         /**
