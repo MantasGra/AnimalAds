@@ -14,10 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\ReportType;
 use App\Entity\Boost;
+use App\Entity\Category;
 use App\Form\BoostType;
 use App\Form\CommentType;
 use App\Entity\Comment;
-use App\Entity\Category;
+use App\Form\AdFilterType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -29,6 +30,7 @@ class AdController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request)
     {
+        $form = $this->createForm(AdFilterType::class);
         $entityManager = $this->getDoctrine()->getManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
@@ -64,13 +66,92 @@ class AdController extends AbstractController
     }
 
     /**
+     * @Route(path="/ads/search", name="search_ads")
+     */
+    public function search(PaginatorInterface $paginator, Request $request)
+    {
+        $form = $this->createForm(AdFilterType::class);
+        $form->handleRequest($request);
+
+        $dateFrom = $form["filterFrom"]->getData();
+        $dateTo = $form["filterTo"]->getData();
+        $priceFrom = $form["priceFrom"]->getData();
+        $priceTo = $form["priceTo"]->getData();
+        $category = $form["filterCategory"]->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            if ($dateFrom > $dateTo) {
+                $this->addFlash('info', 'Date or price fields are incorect!');
+                return $this->render('ad/search.html.twig', [
+                    'adFilterForm' => $form->createView()
+                ]);
+            } else if ($priceFrom > $priceTo) {
+                $this->addFlash('info', 'Date or price fields are incorect!');
+                return $this->render('ad/search.html.twig', [
+                    'adFilterForm' => $form->createView()
+                ]);
+            }
+
+            $queryBuilder->select('u')
+                ->from('App:Ad', 'u');
+
+            if ($dateFrom <= $dateTo && $dateFrom != null && $dateTo != null) {
+                $queryBuilder->where('u.createdAt BETWEEN :dateFrom AND :dateTo')
+                    ->setParameter('dateFrom', $dateFrom)
+                    ->setParameter('dateTo',  $dateTo);
+            } else if ($dateFrom != null) {
+                $queryBuilder->where('u.createdAt >= :dateFrom')
+                    ->setParameter('dateFrom',  $dateFrom);
+            } else if ($dateTo != null) {
+                $queryBuilder->where('u.createdAt <= :dateTo')
+                    ->setParameter('dateTo',  $dateTo);
+            }
+
+            if ($priceFrom <= $priceTo && $priceFrom != null && $priceTo != null) {
+                $queryBuilder->andWhere('u.price BETWEEN :priceFrom AND :priceTo')
+                    ->setParameter('priceFrom', $priceFrom)
+                    ->setParameter('priceTo',  $priceTo);
+            } else if ($priceFrom != null) {
+                $queryBuilder->andWhere('u.price >= :priceFrom')
+                    ->setParameter('priceFrom',  $priceFrom);
+            } else if ($priceTo != null) {
+                $queryBuilder->andWhere('u.price <= :priceTo')
+                    ->setParameter('priceTo',  $priceTo);
+            }
+
+            if ($category != null) {
+                $queryBuilder->andWhere('u.category = :category')
+                    ->setParameter('category',  $category);
+            }
+
+            $query = $queryBuilder->getQuery();
+
+            $pagination = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                6
+            );
+
+            return $this->render('ad/index.html.twig', [
+                'pagination' => $pagination
+            ]);
+        }
+        return $this->render('ad/search.html.twig', [
+            'adFilterForm' => $form->createView()
+        ]);
+    }
+
+
+    /**
      * @Route(path="/ads/saved", name="browse_saved_ads")
      */
     public function savedAdsIndex(PaginatorInterface $paginator, Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-
         $query = $queryBuilder->select('u')
             ->from('App:SavedAd', 'u')
             ->where('u.user = :user')
@@ -89,6 +170,60 @@ class AdController extends AbstractController
             'pagination' => $pagination
         ]);
     }
+
+
+    /**
+     * @Route(path="/ads/my", name="browse_my_ads")
+     */
+    public function myAdsIndex(PaginatorInterface $paginator, Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $query = $queryBuilder->select('u')
+            ->from('App:Ad', 'u')
+            ->where('u.createdBy = :user')
+            ->setParameter('user', $this->getUser())
+            ->getQuery();
+
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+
+        return $this->render('ad/index.html.twig', [
+            'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * @Route(path="/ads/new", name="add_ad")
+     */
+    public function add(Request $request)
+    {
+        $ad = new Ad();
+
+        $form = $this->createForm(AdType::class, $ad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ad->setReportCount(0);
+            $ad->setViewCount(0);
+            $ad->setCreatedAt(new \DateTime());
+            $ad->setCreatedBy($this->getUser());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($ad);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('browse_ads');
+        }
+        return $this->render('ad/add.html.twig', [
+            'adForm' => $form->createView()
+        ]);
+    }
+
 
     /**
      * @Route(path="/ads/new", name="add_ad")

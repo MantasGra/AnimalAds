@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animals!
+{% endblock %}
+
+{% block body %}
+	{{ form_start(adFilterForm, { 'attr': {'class': 'ui large form'}}) }}
+	{{form_errors(adFilterForm)}}
+
+	<div class="ui main text container">
+		<h1 class="ui header">Search for Ads</h1>
+
+		<div class="field">
+			<label>Date from</label>
+			{{form_errors(adFilterForm.filterFrom)}}
+			{{ form_widget(adFilterForm.filterFrom) }}
+		</div>
+
+		<div class="field">
+			<label>Date to</label>
+			{{form_errors(adFilterForm.filterTo)}}
+			{{ form_widget(adFilterForm.filterTo) }}
+		</div>
+
+		<div class="field">
+			<label>Price from</label>
+			{{form_errors(adFilterForm.priceFrom)}}
+			{{ form_widget(adFilterForm.priceFrom) }}
+		</div>
+		<div class="field">
+			<label>Price to</label>
+			{{form_errors(adFilterForm.priceTo)}}
+			{{ form_widget(adFilterForm.priceTo) }}
+		</div>
+		<div class="field">
+			<label>Select category</label>
+			{{form_errors(adFilterForm.filterCategory)}}
+			{{ form_widget(adFilterForm.filterCategory) }}
+		</div>
+
+	
+		<button class="ui button">Search</button>
+
+
+	</div>
+	{{ form_end(adFilterForm) }}
+{% endblock %}

@@ -5,47 +5,54 @@
 
 {% block body %}
 	{{ form_start(adForm, { 'attr': {'class': 'ui large form'}}) }}
-{{form_errors(adForm)}}
+	{{form_errors(adForm)}}
+
 	<div class="ui main text container">
 		<h1 class="ui header">Add your own Ad</h1>
-	
-			<div class="field">
-				<label>Title</label>
-				{{ form_widget(adForm.title) }}
-			</div>
 
-			<div class="field">
-				<label>Category</label>
-					{{ form_widget(adForm.category) }}
-			</div>
+		<div class="field">
+			<label>Title</label>
+			{{form_errors(adForm.title)}}
+			{{ form_widget(adForm.title) }}
+		</div>
 
-			<div class="field">
-				<label>Price</label>
-				{{ form_widget(adForm.price) }}
-			</div>
-			<div class="field">
-				<label>Description</label>
-				{{ form_widget(adForm.description) }}
-			</div>
-			<div class="field">
-				<div class="ui checkbox">
+		<div class="field">
+			<label>Category</label>
+			{{form_errors(adForm.category)}}
+			{{ form_widget(adForm.category) }}
+		</div>
 
-					{{ form_widget(adForm.hidden) }}
-					<label>Is Ad hidden?</label>
-				</div>
-			</div>
+		<div class="field">
+			<label>Price</label>
+			{{form_errors(adForm.price)}}
+			{{ form_widget(adForm.price) }}
+		</div>
+		<div class="field">
+			<label>Description</label>
+			{{form_errors(adForm.description)}}
+			{{ form_widget(adForm.description) }}
+		</div>
+		<div class="field">
+			<div class="ui checkbox">
 
-			<div class="field">
-				<label>Type</label>
-				{{ form_widget(adForm.type) }}
+				{{ form_widget(adForm.hidden) }}
+				<label>Is Ad hidden?</label>
 			</div>
+		</div>
 
-			<div class="field">
-				<label>Animal</label>
-				{{ form_widget(adForm.animal) }}
-			</div>
-			<button class="ui button">Submit</button>
-		
+		<div class="field">
+			<label>Type</label>
+			{{form_errors(adForm.type)}}
+			{{ form_widget(adForm.type) }}
+		</div>
+
+		<div class="field">
+			<label>Animal</label>
+			{{form_errors(adForm.animal)}}
+			{{ form_widget(adForm.animal) }}
+		</div>
+		<button class="ui button">Submit</button>
+
 
 	</div>
 	{{ form_end(adForm) }}
