@@ -4,6 +4,21 @@
 {% endblock %}
 
 {% block body %}
+    <div class="ui tiny modal" id="remove-ad-dialog">
+        <div class="ui header">
+            Are you sure you want to delete this category?
+        </div>
+        <div class="actions">
+            <div class="ui red cancel button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <a id="submit-remove" class="ui green ok button" >
+                <i class="checkmark icon"></i>
+                Yes
+            <a/>
+        </div>
+    </div>
 	<div class="ui container">
 		<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
 		<form action="{{ path('filter_by_category') }}" method="post">
@@ -37,8 +52,10 @@
 									{{ ad.ad.viewCount}}
 									times</div>
 							</div>
-							{% if ad.ad.createdBy ==  app.user  %}
+							{% if ad.ad.createdBy ==  app.user %}
 								<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.ad.id}) }}">Delete</a>
+							{% elseif is_granted('ROLE_ADMIN') %}
+								<a class="open-modal red left floated button" data-link="{{ path('remove_ad',{'id': ad.ad.id}) }}">Delete</a>
 							{% endif %}
 						</div>
 
@@ -58,8 +75,10 @@
 										{{ ad.viewCount}}
 										times</div>
 								</div>
-								{% if ad.createdBy == app.user  %}
+								{% if ad.createdBy == app.user %}
 									<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
+								{% elseif is_granted('ROLE_ADMIN') %}
+									<a class="open-modal ui red left floated button" data-link="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
 								{% endif %}
 							</div>
 						{% endif %}
@@ -71,8 +90,16 @@
 				</div>
 
 			</div>
-			<script>
-				$('#category').dropdown();
-			</script>
 
 		{% endblock %}
+
+{% block javascripts %}
+    <script>
+		$('#category').dropdown();
+        $(document).on("click", ".open-modal", function () {
+            var link = $(this).data('link');
+            $(".ui.modal #submit-remove").attr('href', link);
+            $('.tiny.modal').modal('show');
+        });
+    </script>
+{% endblock %}
