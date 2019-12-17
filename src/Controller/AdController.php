@@ -32,8 +32,23 @@ class AdController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
-        $query = $queryBuilder->select('u')
+        $expiredBoosts = $entityManager->createQueryBuilder()->select('u', 'boost')
             ->from('App:Ad', 'u')
+            ->leftJoin('u.boost', 'boost')
+            ->where("DATE_ADD(boost.dateFrom, boost.duration, 'day') < CURRENT_TIMESTAMP()")
+            ->getQuery()->getResult();
+
+        if (!empty($expiredBoosts)) {
+            foreach ($expiredBoosts as $ad) {
+                $ad->setBoost(null);
+                $entityManager->flush();
+            }
+        }
+        $query = $queryBuilder->select('u', 'boost')
+            ->from('App:Ad', 'u')
+            ->leftJoin('u.boost', 'boost')
+            ->addSelect("( CASE WHEN boost.dateFrom < CURRENT_TIMESTAMP() AND boost.type = 'Premium' THEN 0 ELSE 1 END ) AS HIDDEN ORD")
+            ->orderBy('ORD', 'ASC')
             ->getQuery();
 
         $pagination = $paginator->paginate(
@@ -75,7 +90,7 @@ class AdController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * @Route(path="/ads/new", name="add_ad")
      */
     public function add(Request $request)
@@ -253,7 +268,7 @@ class AdController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-        
+
         $qb = $entityManager->createQueryBuilder();
 
         $qb->select('u')
@@ -472,24 +487,37 @@ class AdController extends AbstractController
      */
     public function filterByCategory(Request $request, PaginatorInterface $paginator)
     {
-        if($request->request->has('category'))
-        {
+        if ($request->request->has('category')) {
             $id = $request->get('category');
-            if($id == "")
-            {
+            if ($id == "") {
                 return $this->redirectToRoute('browse_ads');
             }
+            $entityManager = $this->getDoctrine()->getManager();
             $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
+            $expiredBoosts = $entityManager->createQueryBuilder()->select('u', 'boost')
+                ->from('App:Ad', 'u')
+                ->leftJoin('u.boost', 'boost')
+                ->where("DATE_ADD(boost.dateFrom, boost.duration, 'day') < CURRENT_TIMESTAMP()")
+                ->getQuery()->getResult();
 
+            if (!empty($expiredBoosts)) {
+                foreach ($expiredBoosts as $ad) {
+                    $ad->setBoost(null);
+                    $entityManager->flush();
+                }
+            }
             $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
 
-            $query = $qb->select('ad')
-            ->from('App:Ad', 'ad')
-            ->where('ad.category = :category')
-            ->setParameter('category', $category)
-            ->getQuery();
+            $query = $qb->select('ad', 'boost')
+                ->from('App:Ad', 'ad')
+                ->leftJoin('ad.boost', 'boost')
+                ->where('ad.category = :category')
+                ->setParameter('category', $category)
+                ->addSelect("( CASE WHEN boost.dateFrom < CURRENT_TIMESTAMP() AND boost.type = 'Premium' THEN 0 ELSE 1 END ) AS HIDDEN ORD")
+                ->orderBy('ORD', 'ASC')
+                ->getQuery();
 
-            
+
             $pagination = $paginator->paginate(
                 $query,
                 $request->query->getInt('page', 1),
@@ -507,7 +535,7 @@ class AdController extends AbstractController
         return $this->redirectToRoute('browse_ads');
     }
 
-        /**
+    /**
      * @Route(path="/ads/{id}", name="view_ad")
      */
     public function view($id)
