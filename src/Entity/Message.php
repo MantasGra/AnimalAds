@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
+ * @Vich\Uploadable
  */
 class Message
 {
@@ -44,7 +46,8 @@ class Message
     private $sentTo;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\File", cascade={"persist", "remove"})
+     * @Vich\UploadableField(mapping="file", fileNameProperty="fileName")
+     * @var File
      */
     private $file;
 
@@ -52,6 +55,16 @@ class Message
      * @ORM\Column(type="boolean")
      */
     private $isRead;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $fileName;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     public function __construct()
     {
@@ -74,6 +87,30 @@ class Message
         $this->writtenAt = $writtenAt;
 
         return $this;
+    }
+
+    public function setFile($file = null): void
+    {
+        $this->file = $file;
+
+        if (null !== $file) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFileName(?string $fileName): void
+    {
+        $this->fileName = $fileName;
+    }
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
     }
 
     public function getTitle(): ?string
@@ -123,19 +160,6 @@ class Message
 
         return $this;
     }
-
-    public function getFile(): ?File
-    {
-        return $this->file;
-    }
-
-    public function setFile(?File $file): self
-    {
-        $this->file = $file;
-
-        return $this;
-    }
-
     public function getIsRead(): ?bool
     {
         return $this->isRead;
@@ -144,6 +168,18 @@ class Message
     public function setIsRead(bool $isRead): self
     {
         $this->isRead = $isRead;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
