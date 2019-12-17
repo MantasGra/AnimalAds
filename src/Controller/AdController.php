@@ -33,8 +33,24 @@ class AdController extends AbstractController
         $form = $this->createForm(AdFilterType::class);
         $entityManager = $this->getDoctrine()->getManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        $query = $queryBuilder->select('u')
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        $expiredBoosts = $entityManager->createQueryBuilder()->select('u', 'boost')
             ->from('App:Ad', 'u')
+            ->leftJoin('u.boost', 'boost')
+            ->where("DATE_ADD(boost.dateFrom, boost.duration, 'day') < CURRENT_TIMESTAMP()")
+            ->getQuery()->getResult();
+
+        if (!empty($expiredBoosts)) {
+            foreach ($expiredBoosts as $ad) {
+                $ad->setBoost(null);
+                $entityManager->flush();
+            }
+        }
+        $query = $queryBuilder->select('u', 'boost')
+            ->from('App:Ad', 'u')
+            ->leftJoin('u.boost', 'boost')
+            ->addSelect("( CASE WHEN boost.dateFrom < CURRENT_TIMESTAMP() AND boost.type = 'Premium' THEN 0 ELSE 1 END ) AS HIDDEN ORD")
+            ->orderBy('ORD', 'ASC')
             ->getQuery();
 
         $pagination = $paginator->paginate(
@@ -44,7 +60,8 @@ class AdController extends AbstractController
         );
 
         return $this->render('ad/index.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'categories' => $categories
         ]);
     }
 
@@ -209,47 +226,32 @@ class AdController extends AbstractController
 
 
     /**
-     * @Route(path="/ads/{id}", name="view_ad")
+     * @Route(path="/ads/new", name="add_ad")
      */
-    public function view($id)
+    public function add(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $ad = new Ad();
 
-        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+        $form = $this->createForm(AdType::class, $ad);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ad->setReportCount(0);
+            $ad->setViewCount(0);
+            $ad->setCreatedAt(new \DateTime());
+            $ad->setCreatedBy($this->getUser());
 
-        $qb = $entityManager->createQueryBuilder();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($ad);
+            $entityManager->flush();
 
-        $qb->select('u')
-            ->from('App:SavedAd', 'u')
-            ->where('u.ad = :ad')
-            ->andWhere('u.user = :user')
-            ->setParameter('ad', $ad)
-            ->setParameter('user', $this->getUser());
-
-        $query = $qb->getQuery();
-        $result = $query->getResult();
-
-        $currentAdViewCount = $ad->getViewCount();
-        $ad->setViewCount($currentAdViewCount + 1);
-        $entityManager->flush();
-
-        $comments = $entityManager->getRepository('App:Comment')->findBy(
-            ['ad' => $id, 'parentComment' => null]
-        );
-        // Form for new comment
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-
-        // Render view template
-        return $this->render('ad/view.html.twig', [
-            'ad' => $ad,
-            'id' => $id,
-            'cmts' => $comments,    // Send gathered comments to view template
-            'form' => $form->createView(),  // Send created form to view template
-            'error' => $form->getErrors(true),
-            'savedAd' => $result
+            return $this->redirectToRoute('browse_ads');
+        }
+        return $this->render('ad/add.html.twig', [
+            'adForm' => $form->createView()
         ]);
     }
+
+
 
     /**
      * @Route(path="/ads/{id}/comments/{commid}/reply", name="replycomment")
@@ -278,6 +280,11 @@ class AdController extends AbstractController
             $this->addFlash('success', 'Your reply was added');
             // Render view template
             // use of array() is deprecated, it's better to use []
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        } else {
+            // Flash a warning message
+            $this->addFlash('warning', 'Your reply was invalid');
+            // Render view template
             return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Render reply template
@@ -312,6 +319,11 @@ class AdController extends AbstractController
             $entityManager->flush();
             // Flash a success message
             $this->addFlash('success', 'Your comment was changed');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        } else {
+            // Flash a warning message
+            $this->addFlash('warning', 'Your edit is invalid');
             // Render view template
             return $this->redirectToRoute('view_ad', array('id' => $id));
         }
@@ -353,6 +365,11 @@ class AdController extends AbstractController
             $this->addFlash('success', 'Your comment was added');
             // Render view template
             return $this->redirectToRoute('view_ad', array('id' => $id));
+        } else {
+            // Flash a warning message
+            $this->addFlash('warning', 'Your comment was invalid');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Flash a warning message
         $this->addFlash('warning', 'Something went wrong');
@@ -368,7 +385,7 @@ class AdController extends AbstractController
         // Get commid comment
         $comment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
         // Check if the comment was written by current {user}
-        if ($comment->getWrittenBy()->getId() == $this->getUser()->getId()) {
+        if ($comment->getWrittenBy()->getId() == $this->getUser()->getId() || $this->isGranted('ROLE_ADMIN')) {
             // Check if the comment has any children comments
             if (count($comment->getReplies()) == 0) {
                 // Delete the comment from DB
@@ -376,7 +393,7 @@ class AdController extends AbstractController
                 $entityManager->remove($comment);
                 $entityManager->flush();
                 // Flash a success message
-                $this->addFlash('success', 'Your comment was deleted');
+                $this->addFlash('success', 'The comment was deleted');
                 // Render view template
                 return $this->redirectToRoute('view_ad', array('id' => $id));
             }
@@ -390,8 +407,6 @@ class AdController extends AbstractController
         // Render view template
         return $this->redirectToRoute('view_ad', array('id' => $id));
     }
-
-
 
 
 
@@ -450,7 +465,7 @@ class AdController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-        if ($this->getUser() == $ad->createdBy()) {
+        if ($this->getUser() == $ad->getCreatedBy() || $this->isGranted('ROLE_ADMIN') ) {
             $entityManager->remove($ad);
             $entityManager->flush();
         }
@@ -615,5 +630,101 @@ class AdController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'Your add has been boosted. Thank you for choosing animal ads!');
         return $this->redirectToRoute('view_ad', ['id' => $id]);
+    }
+
+    /**
+     * @Route(path="/ads/categoryfilter", name="filter_by_category")
+     */
+    public function filterByCategory(Request $request, PaginatorInterface $paginator)
+    {
+        if ($request->request->has('category')) {
+            $id = $request->get('category');
+            if ($id == "") {
+                return $this->redirectToRoute('browse_ads');
+            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
+            $expiredBoosts = $entityManager->createQueryBuilder()->select('u', 'boost')
+                ->from('App:Ad', 'u')
+                ->leftJoin('u.boost', 'boost')
+                ->where("DATE_ADD(boost.dateFrom, boost.duration, 'day') < CURRENT_TIMESTAMP()")
+                ->getQuery()->getResult();
+
+            if (!empty($expiredBoosts)) {
+                foreach ($expiredBoosts as $ad) {
+                    $ad->setBoost(null);
+                    $entityManager->flush();
+                }
+            }
+            $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+            $query = $qb->select('ad', 'boost')
+                ->from('App:Ad', 'ad')
+                ->leftJoin('ad.boost', 'boost')
+                ->where('ad.category = :category')
+                ->setParameter('category', $category)
+                ->addSelect("( CASE WHEN boost.dateFrom < CURRENT_TIMESTAMP() AND boost.type = 'Premium' THEN 0 ELSE 1 END ) AS HIDDEN ORD")
+                ->orderBy('ORD', 'ASC')
+                ->getQuery();
+
+
+            $pagination = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                6
+            );
+
+            $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
+            return $this->render('ad/index.html.twig', [
+                'pagination' => $pagination,
+                'categories' => $categories,
+                'selectedCategory' => $category
+            ]);
+        }
+        return $this->redirectToRoute('browse_ads');
+    }
+
+    /**
+     * @Route(path="/ads/{id}", name="view_ad")
+     */
+    public function view($id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb->select('u')
+            ->from('App:SavedAd', 'u')
+            ->where('u.ad = :ad')
+            ->andWhere('u.user = :user')
+            ->setParameter('ad', $ad)
+            ->setParameter('user', $this->getUser());
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        $currentAdViewCount = $ad->getViewCount();
+        $ad->setViewCount($currentAdViewCount + 1);
+        $entityManager->flush();
+
+        $comments = $entityManager->getRepository('App:Comment')->findBy(
+            ['ad' => $id, 'parentComment' => null]
+        );
+        // Form for new comment
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        // Render view template
+        return $this->render('ad/view.html.twig', [
+            'ad' => $ad,
+            'id' => $id,
+            'cmts' => $comments,    // Send gathered comments to view template
+            'form' => $form->createView(),  // Send created form to view template
+            'error' => $form->getErrors(true),
+            'savedAd' => $result
+        ]);
     }
 }

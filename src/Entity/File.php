@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use PlumTreeSystems\FileBundle\Entity\File as PTSFile;
+use Symfony\Component\HttpFoundation\File\File as BaseFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
  */
-class File extends PTSFile
+class File extends BaseFile
 {
     /**
      * @ORM\Id()
