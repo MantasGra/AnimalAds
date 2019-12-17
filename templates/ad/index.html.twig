@@ -19,6 +19,7 @@
             <a/>
         </div>
     </div>
+{% if categories is defined %}
 	<div class="ui container">
 
 		<a class="ui primary right floated button" href="{{ path('add_ad') }}">Add an Ad</a>
@@ -36,6 +37,7 @@
 			</select>
 		</form>
 	</div>
+		{% endif %}
 	<div class="ui main text container">
 		<div class="ui relaxed divided list">
 			{% for ad in pagination %}

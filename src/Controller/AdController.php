@@ -18,6 +18,7 @@ use App\Entity\Category;
 use App\Form\BoostType;
 use App\Form\CommentType;
 use App\Entity\Comment;
+use App\Entity\ViewedAd;
 use App\Form\AdFilterType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -224,6 +225,34 @@ class AdController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route(path="/ads/viewed", name="browse_ad_history")
+     */
+    public function viewedAds(PaginatorInterface $paginator, Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $query = $queryBuilder->select('u')
+            ->from('App:ViewedAd', 'u')
+            ->where('u.user = :user')
+            ->setParameter('user', $this->getUser())
+            ->orderBy('u.viewedAt', 'DESC')
+            ->getQuery();
+
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+
+        return $this->render('ad/index.html.twig', [
+            'pagination' => $pagination
+        ]);
+    }
 
     /**
      * @Route(path="/ads/new", name="add_ad")
@@ -693,6 +722,30 @@ class AdController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+        if($this->getUser())
+        {
+            $checkIfviewed = $entityManager->createQueryBuilder()
+            ->select('a')
+            ->from('App:ViewedAd', 'a')
+            ->where('a.ad = :ad')
+            ->andWhere('a.user = :user')
+            ->setParameter('ad', $ad)
+            ->setParameter('user', $this->getUser())
+            ->getQuery()->getResult();
+
+        if(!empty($checkIfviewed))
+        {
+            $checkIfviewed[0]->setViewedAt(new \DateTime());
+            $entityManager->flush();
+        } else {
+            $viewedAd = new ViewedAd();
+            $viewedAd->setAd($ad);
+            $viewedAd->setUser($this->getUser());
+            $entityManager->persist($viewedAd);
+            $entityManager->flush();
+        }
+        }
+
 
         $qb = $entityManager->createQueryBuilder();
 
