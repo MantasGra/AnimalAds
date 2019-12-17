@@ -73,48 +73,7 @@ class AdController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(path="/ads/{id}", name="view_ad")
-     */
-    public function view($id)
-    {
-        $entityManager = $this->getDoctrine()->getManager();
 
-        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-
-        $qb = $entityManager->createQueryBuilder();
-
-        $qb->select('u')
-            ->from('App:SavedAd', 'u')
-            ->where('u.ad = :ad')
-            ->andWhere('u.user = :user')
-            ->setParameter('ad', $ad)
-            ->setParameter('user', $this->getUser());
-
-        $query = $qb->getQuery();
-        $result = $query->getResult();
-
-        $currentAdViewCount = $ad->getViewCount();
-        $ad->setViewCount($currentAdViewCount + 1);
-        $entityManager->flush();
-
-        $comments = $entityManager->getRepository('App:Comment')->findBy(
-            ['ad' => $id, 'parentComment' => null]
-        );
-        // Form for new comment
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-
-        // Render view template
-        return $this->render('ad/view.html.twig', [
-            'ad' => $ad,
-            'id' => $id,
-            'cmts' => $comments,    // Send gathered comments to view template
-            'form' => $form->createView(),  // Send created form to view template
-            'error' => $form->getErrors(true),
-            'savedAd' => $result
-        ]);
-    }
 
     /**
      * @Route(path="/ads/{id}/comments/{commid}/reply", name="replycomment")
@@ -504,5 +463,48 @@ class AdController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'Your add has been boosted. Thank you for choosing animal ads!');
         return $this->redirectToRoute('view_ad', ['id' => $id]);
+    }
+
+        /**
+     * @Route(path="/ads/{id}", name="view_ad")
+     */
+    public function view($id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
+
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb->select('u')
+            ->from('App:SavedAd', 'u')
+            ->where('u.ad = :ad')
+            ->andWhere('u.user = :user')
+            ->setParameter('ad', $ad)
+            ->setParameter('user', $this->getUser());
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        $currentAdViewCount = $ad->getViewCount();
+        $ad->setViewCount($currentAdViewCount + 1);
+        $entityManager->flush();
+
+        $comments = $entityManager->getRepository('App:Comment')->findBy(
+            ['ad' => $id, 'parentComment' => null]
+        );
+        // Form for new comment
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        // Render view template
+        return $this->render('ad/view.html.twig', [
+            'ad' => $ad,
+            'id' => $id,
+            'cmts' => $comments,    // Send gathered comments to view template
+            'form' => $form->createView(),  // Send created form to view template
+            'error' => $form->getErrors(true),
+            'savedAd' => $result
+        ]);
     }
 }
