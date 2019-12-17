@@ -572,7 +572,9 @@ class AdController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-        $checkIfviewed = $entityManager->createQueryBuilder()
+        if($this->getUser())
+        {
+            $checkIfviewed = $entityManager->createQueryBuilder()
             ->select('a')
             ->from('App:ViewedAd', 'a')
             ->where('a.ad = :ad')
@@ -591,6 +593,7 @@ class AdController extends AbstractController
             $viewedAd->setUser($this->getUser());
             $entityManager->persist($viewedAd);
             $entityManager->flush();
+        }
         }
 
 
