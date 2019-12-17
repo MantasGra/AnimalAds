@@ -37,7 +37,7 @@
 									{{ ad.ad.viewCount}}
 									times</div>
 							</div>
-							{% if ad.ad.createdBy ==  app.user  %}
+							{% if ad.ad.createdBy ==  app.user or is_granted('ROLE_ADMIN') %}
 								<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.ad.id}) }}">Delete</a>
 							{% endif %}
 						</div>
@@ -58,7 +58,7 @@
 										{{ ad.viewCount}}
 										times</div>
 								</div>
-								{% if ad.createdBy == app.user  %}
+								{% if ad.createdBy == app.user or is_granted('ROLE_ADMIN') %}
 									<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
 								{% endif %}
 							</div>

@@ -63,10 +63,12 @@
                             </div>
                             {% if comment.getReplies()|length == 0 %}
                                 {% if app.user %}
-                                    {% if comment.writtenBy.id == app.user.id %}
+                                    {% if comment.writtenBy.id == app.user.id or is_granted('ROLE_ADMIN') %}
                                         <div style="padding-bottom: 1em;" class="actions">
+                                        {% if comment.writtenBy.id == app.user.id %}
                                             <a class="reply"
                                                href="{{ path('editcomment', {'id': id,'commid': comment.id}) }}">Edit</a>
+                                        {% endif %}
                                             <a class="reply"
                                                href="{{ path('deletecomment', {'id': id,'commid': comment.id}) }}">Delete</a>
                                         </div>
@@ -89,10 +91,12 @@
                                             {{ reply.text }}
                                         </div>
                                         {% if app.user %}
-                                            {% if reply.writtenBy.id == app.user.id %}
+                                            {% if reply.writtenBy.id == app.user.id or is_granted('ROLE_ADMIN') %}
                                                 <div class="actions">
+                                                {% if reply.writtenBy.id == app.user.id %}
                                                     <a class="reply"
                                                        href="{{ path('editcomment', {'id': id,'commid': reply.id}) }}">Edit</a>
+                                                {% endif %}
                                                     <a class="reply"
                                                        href="{{ path('deletecomment', {'id': id,'commid': reply.id}) }}">Delete</a>
                                                 </div>

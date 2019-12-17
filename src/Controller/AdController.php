@@ -235,7 +235,7 @@ class AdController extends AbstractController
         // Get commid comment
         $comment = $this->getDoctrine()->getRepository(Comment::class)->find($commid);
         // Check if the comment was written by current {user}
-        if ($comment->getWrittenBy()->getId() == $this->getUser()->getId()) {
+        if ($comment->getWrittenBy()->getId() == $this->getUser()->getId() || in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             // Check if the comment has any children comments
             if (count($comment->getReplies()) == 0) {
                 // Delete the comment from DB
@@ -243,7 +243,7 @@ class AdController extends AbstractController
                 $entityManager->remove($comment);
                 $entityManager->flush();
                 // Flash a success message
-                $this->addFlash('success', 'Your comment was deleted');
+                $this->addFlash('success', 'The comment was deleted');
                 // Render view template
                 return $this->redirectToRoute('view_ad', array('id' => $id));
             }
@@ -315,7 +315,7 @@ class AdController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
-        if ($this->getUser() == $ad->createdBy()) {
+        if ($this->getUser() == $ad->getCreatedBy() || in_array('ROLE_ADMIN', $this->getUser()->getRoles()) ) {
             $entityManager->remove($ad);
             $entityManager->flush();
         }
