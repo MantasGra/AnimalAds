@@ -8,7 +8,9 @@
 
     <div class="ui raised very padded text container segment">
         <div>
+            {% if app.user %}
             <a class="ui right floated button" href="{{ path('contact', { id: ad.id }) }}">Contact Seller</a>
+            {% endif %}
             <h2 class="ui header">{{ ad.title }}</h2>
         </div>
         <p>Price
@@ -33,6 +35,7 @@
 
     </div>
     <div class="ui main text container">
+        {% if app.user %}
         <div class="ui buttons fluid">
             {% if savedAd == null %}
                 <a class="ui right floated basic primary icon button" href="{{ path('save_ad',{'id': ad.id}) }}">Save Ad</a>
@@ -43,9 +46,12 @@
                 <a class="ui floated basic primary button" href="{{ path('edit_ad',{'id': ad.id}) }}">Edit Ad</a>
             {% endif %}
             <a class="ui right floated basic primary button">Subscribe Category</a>
+            {% if ad.createdBy == app.user %}
             <a class="ui primary basic button right floated" href="{{ path('boost_ad', { 'id': ad.id }) }}">Boost</a>
+            {% endif %}
             <a class="ui right floated basic primary button" href="{{ path('report_ad', { 'id': ad.id}) }}">Report Ad</a>
         </div>
+        {% endif %}
         <div class="ui comments">
             <h3 class="ui dividing header">Comments</h3>
             {% for comment in cmts %}
