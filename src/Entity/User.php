@@ -87,37 +87,37 @@ class User implements UserInterface
     private $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Animal", mappedBy="createdBy", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Animal", mappedBy="createdBy", orphanRemoval=true, cascade={"remove"})
      */
     private $animals;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Subscription", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Subscription", mappedBy="user", orphanRemoval=true, cascade={"remove"})
      */
     private $subscriptions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SavedAd", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SavedAd", mappedBy="user", orphanRemoval=true, cascade={"remove"})
      */
     private $savedAds;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ViewedAd", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\ViewedAd", mappedBy="user", orphanRemoval=true, cascade={"remove"})
      */
     private $viewedAds;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="writtenBy", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="writtenBy", orphanRemoval=true, cascade={"remove"})
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="sentFrom", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="sentFrom", orphanRemoval=true, cascade={"remove"})
      */
     private $sentMessages;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="sentTo", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="sentTo", orphanRemoval=true, cascade={"remove"})
      */
     private $receivedMessages;
 
@@ -132,7 +132,7 @@ class User implements UserInterface
     private $enabled;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Ad", mappedBy="createdBy", orphanRemoval=true, cascade={"remove"})
      */
     private $createdAds;
 
@@ -638,6 +638,11 @@ class User implements UserInterface
     public function persistCreatedAds()
     {
         $this->createdAds = clone $this->createdAds;
+    }
+
+    public function persistAnimals()
+    {
+        $this->animals = clone $this->animals;
     }
     
     public function getTempToken(): ?string
