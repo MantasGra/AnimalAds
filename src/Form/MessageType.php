@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class MessageType extends AbstractType
 {
@@ -23,6 +24,9 @@ class MessageType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Title...'
                 ]
+            ])
+            ->add('file', VichFileType::class, [
+                'required' => false
             ])
             ->add('text', TextType::class, [
                 'attr' => [
