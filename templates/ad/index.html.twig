@@ -23,48 +23,56 @@
 		<div class="ui relaxed divided list">
 			{% for ad in pagination %}
 				{% if ad.ad is defined %}
-					<div class="item">
-						<div class="content">
-							<a href="{{ path('view_ad',{'id': ad.ad.id}) }}" class="header">{{ ad.ad.title }}
-								-
-								{{ad.ad.price}}$</a>
-							<div class="description">Uploaded
-								{{ ad.ad.createdAt|date("m/d/Y") }}, viewed
-								{{ ad.ad.viewCount}}
-								times</div>
+					{% if ad.ad.boost is not null and ad.ad.boost.dateFrom|date('Y-m-d') <= "now"|date('Y-m-d') %}
+						<div class="item boosted">
+						{% else %}
+							<div class="item">
+							{% endif %}
+							<div class="content">
+								<a href="{{ path('view_ad',{'id': ad.ad.id}) }}" class="header">{{ ad.ad.title }}
+									-
+									{{ad.ad.price}}$</a>
+								<div class="description">Uploaded
+									{{ ad.ad.createdAt|date("m/d/Y") }}, viewed
+									{{ ad.ad.viewCount}}
+									times</div>
+							</div>
+							{% if ad.ad.createdBy ==  app.user  %}
+								<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.ad.id}) }}">Delete</a>
+							{% endif %}
 						</div>
-						{% if ad.ad.createdBy ==  app.user  %}
-							<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.ad.id}) }}">Delete</a>
+
+					{% else %}
+
+						{% if ad.boost is not null and ad.boost.dateFrom|date('Y-m-d') <= "now"|date('Y-m-d') %}
+							<div class="item boosted">
+							{% else %}
+								<div class="item">
+								{% endif %}
+								<div class="ui content">
+									<a href="{{ path('view_ad',{'id': ad.id}) }}" class="header">{{ ad.title }}
+										-
+										{{ad.price}}$</a>
+									<div class="description">Uploaded
+										{{ ad.createdAt|date("m/d/Y") }}, viewed
+										{{ ad.viewCount}}
+										times</div>
+								</div>
+								{% if ad.createdBy == app.user  %}
+									<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
+								{% endif %}
+							</div>
 						{% endif %}
-					</div>
+					{% endfor %}
+				</div>
 
-				{% else %}
+				<div class="ui right floated pagination menu">
+					{{ knp_pagination_render(pagination) }}
+				</div>
 
-					<div class="item">
-						<div class="content">
-							<a href="{{ path('view_ad',{'id': ad.id}) }}" class="header">{{ ad.title }}
-								-
-								{{ad.price}}$</a>
-							<div class="description">Uploaded
-								{{ ad.createdAt|date("m/d/Y") }}, viewed
-								{{ ad.viewCount}}
-								times</div>
-						</div>
-						{% if ad.createdBy == app.user  %}
-							<a class="ui red left floated button" href="{{ path('remove_ad',{'id': ad.id}) }}">Delete</a>
-						{% endif %}
-					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
+			</div>
+			<script>
+				$('#category').dropdown();
+			</script>
 
-		<div class="ui right floated pagination menu">
-			{{ knp_pagination_render(pagination) }}
-		</div>
-
-	</div>
-	<script>
-		$('#category').dropdown();
-	</script>
-
-{% endblock %}
+		{% endblock %}

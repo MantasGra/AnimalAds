@@ -44,7 +44,7 @@ class Ad
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Boost", inversedBy="ad", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Boost", inversedBy="ad", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $boost;
 
