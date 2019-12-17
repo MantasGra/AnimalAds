@@ -30,16 +30,14 @@ class AdType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, [
-              
-            ])
+            ->add('title', TextType::class, [])
 
             ->add('category', EntityType::class, [
                 'row_attr' => ['class' => 'ui dropdown'],
-                'class' => Category::class,   
+                'class' => Category::class,
                 'choice_label' => function ($category) {
                     return $category->getName();
-                },  
+                },
             ])
 
             ->add('price', NumberType::class, [
@@ -54,7 +52,7 @@ class AdType extends AbstractType
                 'choices'  => [
                     'For rent' => true,
                     'For sale' => false,
-                ],              
+                ],
             ])
             ->add('hidden', CheckboxType::class, [
                 'label'  => 'Is Ad hidden?',
@@ -62,19 +60,23 @@ class AdType extends AbstractType
             ])
 
 
-         
 
             ->add('animal', EntityType::class, [
                 'row_attr' => ['class' => 'ui dropdown'],
-                'class' => Animal::class,   
+                'class' => Animal::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                    ->where('u.createdBy = :user')
-                    ->setParameter('user', $this->security->getUser());
+                    $qb = $er->createQueryBuilder('animalggf')
+                        ->select('animal', 'ad')->from('App:Animal', 'animal')
+                        ->leftJoin('animal.ad', 'ad')
+                        ->where('ad is null')
+                        ->andWhere('animal.createdBy = :user')
+                        ->setParameter('user', $this->security->getUser());
+              
+                    return $qb;
                 },
                 'choice_label' => function ($animal) {
                     return $animal->getName();
-                }  
+                }
             ]);
     }
 

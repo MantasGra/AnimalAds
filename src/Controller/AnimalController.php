@@ -22,6 +22,8 @@ class AnimalController extends AbstractController
 
         $query = $queryBuilder->select('u')
             ->from('App:Animal', 'u')
+              ->where('u.createdBy = :user')
+            ->setParameter('user', $this->getUser())
             ->getQuery();
 
         $pagination = $paginator->paginate(
