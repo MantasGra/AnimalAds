@@ -34,7 +34,7 @@ class Boost
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ad", mappedBy="boost", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Ad", mappedBy="boost", cascade={"persist"})
      */
     private $ad;
 
