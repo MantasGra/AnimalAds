@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="ui main text container">
+    <div class="ui main text container" style="min-height: 70%">
         <a class="ui left labeled icon violet button" href="{{ path('browse_messages') }}"><i class="left arrow icon"></i>Back to Messages</a>
         <div>
             <span class="ui right floated button">to {{ message.sentTo.email }}</span>
@@ -13,6 +13,9 @@
         </div>
         <div class="ui divider"></div>
         <p>{{ message.text }}</p>
+        {% if message.fileName|length > 0 %}
+        <a href="{{ file_path ~ '/' ~ message.fileName }}" class="ui big label" style="max-width: 150px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><i class="download icon"></i>{{ message.fileName }}</a>
+        {% endif %}
         <p>Sent at {{ message.writtenAt|date('Y-m-d H:i') }}</p>
     </div>
 {% endblock %}

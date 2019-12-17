@@ -6,7 +6,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "knplabs/knp-paginator-bundle": "^5.0",
-        "plumtreesystems/file-bundle": "^0.0.2",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "4.3.*",
         "symfony/config": "4.3.*",
@@ -29,7 +28,8 @@
         "symfony/validator": "4.3.*",
         "symfony/web-link": "4.3.*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.3.*",
+        "vich/uploader-bundle": "v1.11.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
