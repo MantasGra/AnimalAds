@@ -146,6 +146,11 @@ class AdController extends AbstractController
             // Render view template
             // use of array() is deprecated, it's better to use []
             return $this->redirectToRoute('view_ad', array('id' => $id));
+        } else {
+            // Flash a warning message
+            $this->addFlash('warning', 'Your reply was invalid');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
         }
         // Render reply template
         return $this->render('ad/replyedit.html.twig', [
@@ -179,6 +184,11 @@ class AdController extends AbstractController
             $entityManager->flush();
             // Flash a success message
             $this->addFlash('success', 'Your comment was changed');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        } else {
+            // Flash a warning message
+            $this->addFlash('warning', 'Your edit is invalid');
             // Render view template
             return $this->redirectToRoute('view_ad', array('id' => $id));
         }
@@ -218,6 +228,11 @@ class AdController extends AbstractController
             $entityManager->flush();
             // Flash a success message
             $this->addFlash('success', 'Your comment was added');
+            // Render view template
+            return $this->redirectToRoute('view_ad', array('id' => $id));
+        } else {
+            // Flash a warning message
+            $this->addFlash('warning', 'Your comment was invalid');
             // Render view template
             return $this->redirectToRoute('view_ad', array('id' => $id));
         }
