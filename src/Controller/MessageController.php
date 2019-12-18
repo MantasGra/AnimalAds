@@ -35,9 +35,11 @@ class MessageController extends AbstractController
 
         // Form for new message
         $message = new Message();
+        $ad = $this->getDoctrine()->getRepository(Ad::class)->find($id);
         $form = $this->createForm(MessageType::class, $message);
         // Render contact template
         return $this->render('ad/contact.html.twig', [
+            'ad' => $ad,
             'id' => $id,    // Send ad {id} to contact template
             'form' => $form->createView(),  // Send created form to contact template
             'error' => $form->getErrors(true)
