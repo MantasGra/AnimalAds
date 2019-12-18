@@ -5,8 +5,13 @@
 
 {% block body %}
 	<div class="ui main text container">
-		<h3 class="ui dividing header">Message seller</h3>
-		{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submitcontact', {'id': '1'}), 'method': 'POST'}) }}
+		{% if ad is defined%}
+			<h3 class="ui dividing header">Message seller</h3>
+			{{ form_start(form, { 'attr': {'class': 'ui large form'},'action': path('submitcontact', {'id': ad.id}), 'method': 'POST'}) }}
+		{% else %}
+		<h3 class="ui dividing header">Message user</h3>
+		{{ form_start(form, { 'attr': {'class': 'ui large form'}, 'method': 'POST'}) }}
+		{% endif %}
 		{% if error.current %}
 			<div class="ui negative message">
 				<i class="close icon"></i>

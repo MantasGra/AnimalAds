@@ -50,8 +50,7 @@
 						<td data-label="Surname">{{ user.lastName }}</td>
 						<td data-label="Email">{{ user.email }}</td>
 						<td data-label="Action">
-							<a class="ui button">View</a>
-							<a class="ui button">Message</a>
+							<a class="ui button" href="{{ path('message_create', {'id': user.id}) }}">Message</a>
 							<a class="open-modal negative ui button" data-id="{{ user.id }}" href="#remove-user-dialog">Remove</a>
 						</td>
 					</tr>

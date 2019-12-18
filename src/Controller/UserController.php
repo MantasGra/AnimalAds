@@ -74,7 +74,6 @@ class UserController extends AbstractController
         if ($request->get('save'))
         {
             $deletedManager = $this->getDoctrine()->getManager('deleted_users');
-            $user->persistCreatedAds();
             $deletedManager->persist($user);
             $deletedManager->flush();
         }

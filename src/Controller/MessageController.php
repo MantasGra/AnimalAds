@@ -6,8 +6,10 @@ namespace App\Controller;
 
 use App\Entity\Ad;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\MessageType;
 use App\Repository\MessageRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -107,5 +109,28 @@ class MessageController extends AbstractController
             ]);
         }
         $this->redirectToRoute('browse_messages');
+    }
+
+    /**
+     * @Route(path="/messages/create/{id}", name="message_create")
+     */
+    public function create(User $user, EntityManagerInterface $em, Request $request)
+    {
+        $message = new Message();
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $message->setSentTo($user);
+            $message->setSentFrom($this->getUser());
+            $message->setWrittenAt(new \DateTime());
+            $em->persist($message);
+            $em->flush();
+            $this->addFlash('success', 'Your message was sent');
+            return $this->redirectToRoute('browse_users');
+        }
+        return $this->render('ad/contact.html.twig', [ 
+            'form' => $form->createView(), 
+            'error' => $form->getErrors(true)
+        ]);
     }
 }
